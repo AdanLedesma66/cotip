@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout SCM') {
             steps {
-                git url: 'https://github.com/AdanLedesma66/Cotizacion-Conti.git',
+                git url: 'https://github.com/AdanLedesma66/cotip.git',
                     branch: 'main',
                     credentialsId: ''
             }
