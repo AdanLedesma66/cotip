@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        jdk 'OpenJDK21'
+        jdk 'OpenJDK17'
     }
 
     stages {
@@ -10,7 +10,7 @@ pipeline {
             steps {
                 git url: 'https://github.com/AdanLedesma66/cotip.git',
                     branch: 'main',
-                    credentialsId: ''
+                    credentialsId: '65b550b7-21d7-4241-addc-e68c73f9395d'
             }
         }
 
