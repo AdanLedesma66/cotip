@@ -99,12 +99,12 @@ public class CotipOutPortImpl implements CotipOutPort {
             Element cotizacionesSection = doc.getElementById("cotizaciones");
 
             if (cotizacionesSection != null) {
-                Elements monedas = cotizacionesSection.select(".moneda");
+                Elements rows = cotizacionesSection.select("table.table tbody tr");
 
-                for (Element monedaElement : monedas) {
-                    String exchangeRate = monedaElement.select(".nombre").text();
-                    BigDecimal buyRate = new BigDecimal(monedaElement.select(".compra").text());
-                    BigDecimal sellRate = new BigDecimal(monedaElement.select(".venta").text());
+                for (Element row : rows) {
+                    String exchangeRate = row.select("td").get(0).text();
+                    BigDecimal buyRate = new BigDecimal(row.select("td").get(1).text().replace(",", ""));
+                    BigDecimal sellRate = new BigDecimal(row.select("td").get(2).text().replace(",", ""));
 
                     FamiliarResponse cotizacion = FamiliarResponse.builder()
                             .exchangeRate(exchangeRate)
@@ -121,4 +121,5 @@ public class CotipOutPortImpl implements CotipOutPort {
 
         return cotizaciones;
     }
+
 }
