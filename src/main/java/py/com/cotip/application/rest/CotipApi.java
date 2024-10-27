@@ -19,8 +19,10 @@ public class CotipApi {
     // ::: requests
 
     @GetMapping("/continental")
-    public ResponseEntity cotizaciones(){
+    public ResponseEntity continental(){
         return ResponseEntity.ok(action.findCotizacionContinentalResponse());
     }
 
+    @GetMapping("/familiar")
+    public ResponseEntity familiar() throws Exception { return ResponseEntity.ok(action.findFamiliarCotizacionResponse());}
 }

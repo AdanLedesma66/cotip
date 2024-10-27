@@ -5,7 +5,9 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
+import py.com.cotip.application.rest.model.FamiliarDto;
 import py.com.cotip.domain.mapper.ContinentalDomainMapper;
+import py.com.cotip.domain.mapper.FamiliarDomainMapper;
 import py.com.cotip.domain.port.in.CotipInPort;
 import py.com.cotip.domain.port.out.CotipOutPort;
 import py.com.cotip.domain.port.out.response.ContinentalResponse;
@@ -88,5 +90,11 @@ public class CotipService implements CotipInPort {
         });
 
         return cotizacionList;
+    }
+
+    @Override
+    public List<FamiliarDto> findFamiliarCotizacionResponse() throws Exception {
+        var familiarDtoList = FamiliarDomainMapper.INSTANCE.toListFamiliarDto(cotipOutPort.findFamiliarCotizacion());
+        return familiarDtoList;
     }
 }
