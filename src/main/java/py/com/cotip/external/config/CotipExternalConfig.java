@@ -11,7 +11,7 @@ public class CotipExternalConfig {
     // ::: beans
 
     @Bean
-    public CotipOutPort cotizacionOutPort(){
-        return new CotipOutPortImpl();
+    public CotipOutPort cotizacionOutPort(CotipProperties cotipProperties){
+        return new CotipOutPortImpl(cotipProperties);
     }
 }
