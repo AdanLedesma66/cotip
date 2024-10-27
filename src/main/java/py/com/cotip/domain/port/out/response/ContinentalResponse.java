@@ -14,18 +14,12 @@ public class ContinentalResponse {
 
     // ::: vars
 
-    @JsonProperty(value = "divisa") //todo cambiar variables y sacar urlImagen
     private String exchangeRate;
 
-    @JsonProperty(value = "codigo")
     private String currencyCode;
 
-    @JsonProperty(value = "compra")
     private BigDecimal buyRate;
 
-    @JsonProperty(value = "venta")
     private BigDecimal sellRate;
 
-    @JsonProperty(value = "urlImagen")
-    private String urlImage;
 }
