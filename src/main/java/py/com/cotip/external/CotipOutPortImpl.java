@@ -23,13 +23,14 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+
 @Slf4j
 @AllArgsConstructor
 public class CotipOutPortImpl implements CotipOutPort {
 
     // ::: path
 
-    private final CotipProperties cotipProperties;
+    private CotipProperties cotipProperties;
 
     // ::: externals
 

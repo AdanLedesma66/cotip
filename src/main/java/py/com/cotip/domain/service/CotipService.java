@@ -15,7 +15,6 @@ import py.com.cotip.external.model.ContinentalExternal;
 
 import java.util.List;
 @Slf4j
-@NoArgsConstructor
 @AllArgsConstructor
 public class CotipService implements CotipInPort {
 
