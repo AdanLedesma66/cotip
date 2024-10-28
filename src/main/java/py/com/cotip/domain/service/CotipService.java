@@ -25,7 +25,7 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "continental", key = "'continentalResponse'")
     @Override
-    public List<ContinentalResponse> findCotizacionContinentalResponse() {
+    public List<ContinentalResponse> findCotizacionContinentalResponse() throws Exception {
         List<ContinentalExternal> cotizacionExternals = cotipOutPort.findContinentalCotizacion();
 
         var continentalResponseList = ContinentalDomainMapper.INSTANCE.externalToListResponse(cotizacionExternals);

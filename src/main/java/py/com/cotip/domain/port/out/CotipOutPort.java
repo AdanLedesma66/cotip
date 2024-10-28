@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface CotipOutPort {
 
-    ContinentalBearerExternal findContinentalBearerToken();
+    ContinentalBearerExternal findContinentalBearerToken() throws Exception;
 
-    List<ContinentalExternal> findContinentalCotizacion();
+    List<ContinentalExternal> findContinentalCotizacion() throws Exception;
 
     List<FamiliarResponse> findFamiliarCotizacion() throws Exception;
 

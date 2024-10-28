@@ -19,7 +19,7 @@ public class CotipApi {
     // ::: requests
 
     @GetMapping("/continental")
-    public ResponseEntity continental(){
+    public ResponseEntity continental() throws Exception{
         return ResponseEntity.ok(action.findCotizacionContinentalResponse());
     }
 

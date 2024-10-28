@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
-
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -35,7 +34,7 @@ public class CotipOutPortImpl implements CotipOutPort {
     // ::: externals
 
     @Override
-    public ContinentalBearerExternal findContinentalBearerToken() {
+    public ContinentalBearerExternal findContinentalBearerToken() throws Exception {
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(cotipProperties.getContinentalBearerTokenPath()))
@@ -56,13 +55,14 @@ public class CotipOutPortImpl implements CotipOutPort {
             ContinentalBearerExternal bearerDto = objectMapper.readValue(response.body(), ContinentalBearerExternal.class);
             return bearerDto;
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            return null;
+            log.error("Error al obtener las cotizaciones de Banco Continental", e);
+            throw new Exception("Error al obtener las cotizaciones del Banco Continental");
         }
     }
 
     @Override
-    public List<ContinentalExternal> findContinentalCotizacion() {
+    public List<ContinentalExternal> findContinentalCotizacion() throws Exception {
+
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(cotipProperties.getContinentalPath()))
@@ -72,7 +72,6 @@ public class CotipOutPortImpl implements CotipOutPort {
                 .header("Subscription-Key", "3c35bb9e5fa948adb8d64c123d9d1a45")
                 .GET()
                 .build();
-
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -82,8 +81,8 @@ public class CotipOutPortImpl implements CotipOutPort {
                     });
             return cotizacionExternal;
         } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
-            return null;
+            log.error("Error al obtener las cotizaciones de Banco Continental", e);
+            throw new Exception("Error al obtener las cotizaciones del Banco Continental");
         }
 
     }
@@ -115,7 +114,7 @@ public class CotipOutPortImpl implements CotipOutPort {
             }
         } catch (IOException e) {
             log.error("Error al obtener las cotizaciones de Banco Familiar", e);
-            throw new Exception(); // todo mejorar excepciones
+            throw new Exception("Error al obtener las cotizaciones de Banco Familiar");
         }
 
         return cotizaciones;

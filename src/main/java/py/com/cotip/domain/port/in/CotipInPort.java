@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface CotipInPort {
 
-    List<ContinentalResponse> findCotizacionContinentalResponse();
+    List<ContinentalResponse> findCotizacionContinentalResponse() throws Exception;
 
     List<FamiliarDto> findFamiliarCotizacionResponse() throws Exception;
 
