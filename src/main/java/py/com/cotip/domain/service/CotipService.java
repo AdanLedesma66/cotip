@@ -24,13 +24,15 @@ public class CotipService implements CotipInPort {
 
     // ::: impl
 
-    @Cacheable(value = "cotizaciones", key = "'cotizacionResponse'") //todo ajustar cache
+    @Cacheable(value = "continental", key = "'continentalResponse'")
+    @Override
     public List<ContinentalResponse> findCotizacionContinentalResponse() {
         List<ContinentalExternal> cotizacionExternals = cotipOutPort.findContinentalCotizacion();
 
         return ContinentalDomainMapper.INSTANCE.externalToListResponse(cotizacionExternals);
     }
 
+    @Cacheable(value = "familiar", key = "'familiarResponse'")
     @Override
     public List<FamiliarDto> findFamiliarCotizacionResponse() throws Exception {
         var familiarDtoList = FamiliarDomainMapper.INSTANCE.toListFamiliarDto(cotipOutPort.findFamiliarCotizacion());
