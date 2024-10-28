@@ -13,8 +13,11 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class FamiliarDto {
 
+    // ::: vars
+
     private String exchangeRate;
-    //todo agregar currency code
+    private String currencyCode;
     private BigDecimal buyRate;
     private BigDecimal sellRate;
+
 }
