@@ -3,7 +3,7 @@ package py.com.cotip.domain.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import py.com.cotip.domain.port.out.response.ContinentalResponse;
-import py.com.cotip.external.model.ContinentalExternal;
+import py.com.cotip.external.webservice.model.ContinentalExternal;
 
 import java.util.List;
 

@@ -9,7 +9,7 @@ import py.com.cotip.domain.mapper.FamiliarDomainMapper;
 import py.com.cotip.domain.port.in.CotipInPort;
 import py.com.cotip.domain.port.out.CotipOutPort;
 import py.com.cotip.domain.port.out.response.ContinentalResponse;
-import py.com.cotip.external.model.ContinentalExternal;
+import py.com.cotip.external.webservice.model.ContinentalExternal;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package py.com.cotip.external;
+package py.com.cotip.external.webservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,9 +10,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import py.com.cotip.domain.port.out.CotipOutPort;
 import py.com.cotip.domain.port.out.response.FamiliarResponse;
-import py.com.cotip.external.config.CotipProperties;
-import py.com.cotip.external.model.ContinentalBearerExternal;
-import py.com.cotip.external.model.ContinentalExternal;
+import py.com.cotip.external.webservice.config.CotipProperties;
+import py.com.cotip.external.webservice.model.ContinentalBearerExternal;
+import py.com.cotip.external.webservice.model.ContinentalExternal;
 
 import java.io.IOException;
 import java.math.BigDecimal;

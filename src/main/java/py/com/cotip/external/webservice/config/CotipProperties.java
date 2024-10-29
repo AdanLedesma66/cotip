@@ -1,4 +1,4 @@
-package py.com.cotip.external.config;
+package py.com.cotip.external.webservice.config;
 
 
 import lombok.Getter;

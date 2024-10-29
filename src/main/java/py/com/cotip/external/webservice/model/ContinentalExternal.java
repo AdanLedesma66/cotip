@@ -1,4 +1,4 @@
-package py.com.cotip.external.model;
+package py.com.cotip.external.webservice.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
