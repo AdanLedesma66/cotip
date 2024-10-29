@@ -1,7 +1,5 @@
 package py.com.cotip.external.cotipdb.config;
 
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
@@ -26,12 +24,6 @@ public class CotipBaseEntity {
 
     private String provider;
 
-    private OffsetDateTime inserted;
-
-    private String inserter;
-
-    private OffsetDateTime modified;
-
-    private String modifier;
+    private OffsetDateTime uploadDate;
 
 }
