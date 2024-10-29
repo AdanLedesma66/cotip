@@ -1,5 +1,6 @@
 package py.com.cotip.application.config;
 
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import py.com.cotip.domain.port.in.CotipInPort;
@@ -14,8 +15,7 @@ public class CotipConfig {
     // ::: beans
 
     @Bean
-    public CotipInPort cotizacionService(CotipOutPort cotizacionOutPort, CotipDbOutPort cotipDbOutPort){
-        return new CotipService(cotizacionOutPort, cotipDbOutPort);
+    public CotipInPort cotizacionService(CotipOutPort cotizacionOutPort, CotipDbOutPort cotipDbOutPort, ApplicationContext applicationContext) {
+        return new CotipService(cotizacionOutPort, cotipDbOutPort, applicationContext);
     }
-
 }

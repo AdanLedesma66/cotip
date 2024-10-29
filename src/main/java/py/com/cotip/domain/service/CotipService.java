@@ -1,8 +1,9 @@
 package py.com.cotip.domain.service;
 
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import py.com.cotip.application.rest.model.FamiliarDto;
 import py.com.cotip.domain.commons.TipoProveedor;
@@ -21,13 +22,27 @@ import java.util.List;
 import java.util.UUID;
 
 @Slf4j
-@AllArgsConstructor
 public class CotipService implements CotipInPort {
 
     // ::: inyects
 
-    private CotipOutPort cotipOutPort;
-    private CotipDbOutPort cotipDbOutPort;
+    private final CotipOutPort cotipOutPort;
+    private final CotipDbOutPort cotipDbOutPort;
+    private final ApplicationContext applicationContext;
+
+    // ::: constructor
+
+    public CotipService(CotipOutPort cotipOutPort, CotipDbOutPort cotipDbOutPort, @Lazy ApplicationContext applicationContext) {
+        this.cotipOutPort = cotipOutPort;
+        this.cotipDbOutPort = cotipDbOutPort;
+        this.applicationContext = applicationContext;
+    }
+
+    // ::: service se inyecta asi mismo para obtener las respuestas cacheadas
+
+    private CotipService getSelf() {
+        return applicationContext.getBean(CotipService.class);
+    }
 
     // ::: impl
 
@@ -87,8 +102,8 @@ public class CotipService implements CotipInPort {
     public void cacheCotizacionesDiarias() {
         try {
             log.info("Ejecutando carga diaria de cotizaciones");
-            findCotizacionContinentalResponse();
-            findFamiliarCotizacionResponse();
+            getSelf().findCotizacionContinentalResponse();
+            getSelf().findFamiliarCotizacionResponse();
         } catch (Exception e) {
             log.error("Error al cargar las cotizaciones diarias: ", e);
         }
