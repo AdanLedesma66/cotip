@@ -37,7 +37,7 @@ public class CotipService implements CotipInPort {
         List<ContinentalExternal> cotizacionExternals = cotipOutPort.findContinentalCotizacion();
 
         var continentalResponseList = ContinentalDomainMapper.INSTANCE.externalToListResponse(cotizacionExternals);
-
+        log.info("Se ajustan algunos datos de la cotizacion obtenida");
         continentalResponseList.forEach(cotizacion -> {
             switch (cotizacion.getExchangeRate()) {
                 case "DOLAR CHQ./TRANSF.":
@@ -48,7 +48,7 @@ public class CotipService implements CotipInPort {
                     break;
             }
             cotizacion.setCurrencyCode(cotizacion.getCurrencyCode().trim());
-
+        log.info("Guardamos las cotizaciones");
             saveCotipEntity(CotipDbMapper.INSTANCE.toContinentalResponse(cotizacion), TipoProveedor.BANCO_CONTINENTAL.getDescription());
         });
 
@@ -60,6 +60,7 @@ public class CotipService implements CotipInPort {
     public List<FamiliarDto> findFamiliarCotizacionResponse() throws Exception {
         var familiarDtoList = FamiliarDomainMapper.INSTANCE.toListFamiliarDto(cotipOutPort.findFamiliarCotizacion());
 
+        log.info("Se ajustan algunos datos de la cotizacion obtenida");
         familiarDtoList.forEach(cotizacion -> {
             switch (cotizacion.getExchangeRate()) {
                 case "Dólar Efectivo", "Dólar Cheque / Transferencia":
@@ -75,6 +76,7 @@ public class CotipService implements CotipInPort {
                     cotizacion.setCurrencyCode("EUR");
                     break;
             }
+            log.info("Guardamos las cotizaciones");
             saveCotipEntity(CotipDbMapper.INSTANCE.toFamiliarDto(cotizacion), TipoProveedor.BANCO_FAMILIAR.getDescription());
         });
 
@@ -84,7 +86,7 @@ public class CotipService implements CotipInPort {
     @Scheduled(cron = "0 0 0 * * *")
     public void cacheCotizacionesDiarias() {
         try {
-            log.info("Ejecutando carga diaria de cotizaciones...");
+            log.info("Ejecutando carga diaria de cotizaciones");
             findCotizacionContinentalResponse();
             findFamiliarCotizacionResponse();
         } catch (Exception e) {

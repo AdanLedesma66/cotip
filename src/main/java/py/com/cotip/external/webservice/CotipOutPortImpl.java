@@ -35,6 +35,7 @@ public class CotipOutPortImpl implements CotipOutPort {
 
     @Override
     public ContinentalBearerExternal findContinentalBearerToken() throws Exception {
+        log.info("Obteniendo bearer token del banco continental");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(cotipProperties.getContinentalBearerTokenPath()))
@@ -53,16 +54,17 @@ public class CotipOutPortImpl implements CotipOutPort {
 
             ObjectMapper objectMapper = new ObjectMapper();
             ContinentalBearerExternal bearerDto = objectMapper.readValue(response.body(), ContinentalBearerExternal.class);
+            log.info("La llamada se ejecuto con exito");
             return bearerDto;
         } catch (IOException | InterruptedException e) {
-            log.error("Error al obtener las cotizaciones de Banco Continental", e);
+            log.error("Error al obtener el bearer token de Banco Continental", e);
             throw new Exception("Error al obtener las cotizaciones del Banco Continental");
         }
     }
 
     @Override
     public List<ContinentalExternal> findContinentalCotizacion() throws Exception {
-
+        log.info("Obteniendo cotizacion del banco continental");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(cotipProperties.getContinentalPath()))
@@ -79,6 +81,7 @@ public class CotipOutPortImpl implements CotipOutPort {
             List<ContinentalExternal> cotizacionExternal = objectMapper.readValue(response.body(),
                     new TypeReference<>() {
                     });
+            log.info("La llamada se ejecuto con exito");
             return cotizacionExternal;
         } catch (IOException | InterruptedException e) {
             log.error("Error al obtener las cotizaciones de Banco Continental", e);
@@ -89,9 +92,11 @@ public class CotipOutPortImpl implements CotipOutPort {
 
     @Override
     public List<FamiliarResponse> findFamiliarCotizacion() throws Exception {
+        log.info("Obteniendo cotizacion del banco familiar");
         List<FamiliarResponse> cotizaciones = new ArrayList<>();
 
         try {
+            log.info("Se scrapean del html los datos de la cotizacion");
             Document doc = Jsoup.connect(cotipProperties.getFamiliarPath()).get();
 
             Element cotizacionesSection = doc.getElementById("cotizaciones");
@@ -112,6 +117,7 @@ public class CotipOutPortImpl implements CotipOutPort {
                     cotizaciones.add(cotizacion);
                 }
             }
+            log.info("La llamada se ejecuto con exito");
         } catch (IOException e) {
             log.error("Error al obtener las cotizaciones de Banco Familiar", e);
             throw new Exception("Error al obtener las cotizaciones de Banco Familiar");
