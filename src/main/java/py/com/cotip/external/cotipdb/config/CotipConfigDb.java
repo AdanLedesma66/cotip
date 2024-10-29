@@ -1,5 +1,6 @@
 package py.com.cotip.external.cotipdb.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import py.com.cotip.domain.port.out.CotipDbOutPort;
 import py.com.cotip.external.cotipdb.CotipDbOutPortImpl;
@@ -7,7 +8,8 @@ import py.com.cotip.external.cotipdb.CotipDbOutPortImpl;
 @Configuration
 public class CotipConfigDb {
 
-    public CotipDbOutPort cotipConfigDb(){
+    @Bean
+    public CotipDbOutPort cotipDbOutPort(){
         return new CotipDbOutPortImpl();
     }
 
