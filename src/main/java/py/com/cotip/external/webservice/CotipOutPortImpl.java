@@ -13,9 +13,11 @@ import py.com.cotip.domain.port.out.response.FamiliarResponse;
 import py.com.cotip.external.webservice.config.CotipProperties;
 import py.com.cotip.external.webservice.model.ContinentalBearerExternal;
 import py.com.cotip.external.webservice.model.ContinentalExternal;
+import py.com.cotip.external.webservice.util.CurrencyUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -81,6 +83,15 @@ public class CotipOutPortImpl implements CotipOutPort {
             List<ContinentalExternal> cotizacionExternal = objectMapper.readValue(response.body(),
                     new TypeReference<>() {
                     });
+
+            cotizacionExternal.forEach(cotizacion -> {
+                BigDecimal buyRate = CurrencyUtil.convertRate(cotizacion.getBuyRate());
+                BigDecimal sellRate = CurrencyUtil.convertRate(cotizacion.getSellRate());
+
+                // Asignar los valores transformados
+                cotizacion.setBuyRate(buyRate);
+                cotizacion.setSellRate(sellRate);
+            });
             log.info("La llamada se ejecuto con exito");
             return cotizacionExternal;
         } catch (IOException | InterruptedException e) {
