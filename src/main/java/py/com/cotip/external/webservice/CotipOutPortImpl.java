@@ -13,6 +13,7 @@ import py.com.cotip.domain.port.out.response.FamiliarResponse;
 import py.com.cotip.external.webservice.config.CotipProperties;
 import py.com.cotip.external.webservice.model.ContinentalBearerExternal;
 import py.com.cotip.external.webservice.model.ContinentalExternal;
+import py.com.cotip.external.webservice.model.GnbExternal;
 import py.com.cotip.external.webservice.util.CurrencyUtil;
 
 import java.io.IOException;
@@ -135,6 +136,11 @@ public class CotipOutPortImpl implements CotipOutPort {
         }
 
         return cotizaciones;
+    }
+
+    @Override
+    public List<GnbExternal> findGnbCotizacion() throws Exception {
+        return null;
     }
 
 }

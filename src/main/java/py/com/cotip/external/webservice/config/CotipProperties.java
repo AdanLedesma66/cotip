@@ -20,4 +20,7 @@ public class CotipProperties {
     @Value("${cotizacion.familiar.path}")
     private String familiarPath;
 
+    @Value("${cotizacion.gnb.path}")
+    private String gnbPath;
+
 }

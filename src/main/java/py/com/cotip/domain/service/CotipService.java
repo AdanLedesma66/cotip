@@ -6,6 +6,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import py.com.cotip.application.rest.model.FamiliarDto;
+import py.com.cotip.application.rest.model.GnbDto;
 import py.com.cotip.domain.commons.TipoProveedor;
 import py.com.cotip.domain.mapper.ContinentalDomainMapper;
 import py.com.cotip.domain.mapper.FamiliarDomainMapper;
@@ -39,7 +40,6 @@ public class CotipService implements CotipInPort {
     }
 
     // ::: service se inyecta asi mismo para obtener las respuestas cacheadas
-
     private CotipService getSelf() {
         return applicationContext.getBean(CotipService.class);
     }
@@ -97,6 +97,13 @@ public class CotipService implements CotipInPort {
 
         return familiarDtoList;
     }
+
+    @Override
+    public List<GnbDto> findGnbCotizacionResponse() throws Exception {
+        return null;
+    }
+
+    // ::: externals
 
     @Scheduled(cron = "0 0 0 * * *")
     public void cacheCotizacionesDiarias() {

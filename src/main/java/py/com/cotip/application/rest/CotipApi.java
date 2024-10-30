@@ -26,4 +26,9 @@ public class CotipApi {
 
     @GetMapping("/familiar")
     public ResponseEntity familiar() throws Exception { return ResponseEntity.ok(action.findFamiliarCotizacionResponse());}
+
+    @GetMapping("/gnb")
+    public ResponseEntity gnb() throws Exception {
+        return ResponseEntity.ok(action.findGnbCotizacionResponse());
+    }
 }
