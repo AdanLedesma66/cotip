@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import py.com.cotip.domain.commons.TipoProveedor;
 import py.com.cotip.domain.port.out.CotipDbOutPort;
-import py.com.cotip.external.cotipdb.entities.CotipEntity;
+import py.com.cotip.external.cotipdb.model.CotipEntity;
 import py.com.cotip.external.cotipdb.repository.CotipRepository;
 
 import java.time.OffsetDateTime;

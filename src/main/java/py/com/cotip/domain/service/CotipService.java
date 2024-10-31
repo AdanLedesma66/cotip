@@ -18,7 +18,7 @@ import py.com.cotip.domain.port.in.CotipInPort;
 import py.com.cotip.domain.port.out.CotipDbOutPort;
 import py.com.cotip.domain.port.out.CotipOutPort;
 import py.com.cotip.domain.port.out.response.ContinentalResponse;
-import py.com.cotip.external.cotipdb.entities.CotipEntity;
+import py.com.cotip.external.cotipdb.model.CotipEntity;
 import py.com.cotip.external.cotipdb.mapper.CotipDbMapper;
 
 import java.util.List;

@@ -1,7 +1,7 @@
 package py.com.cotip.domain.port.out;
 
 import py.com.cotip.domain.commons.TipoProveedor;
-import py.com.cotip.external.cotipdb.entities.CotipEntity;
+import py.com.cotip.external.cotipdb.model.CotipEntity;
 
 import java.util.List;
 

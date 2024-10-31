@@ -172,7 +172,6 @@ public class CotipOutPortImpl implements CotipOutPort {
                 long buyRate = new BigDecimal(rateParts[0].replace("Compra", "").trim().replace(".", "")).longValue();
                 long sellRate = new BigDecimal(rateParts[1].replace("Venta", "").trim().replace(".", "")).longValue();
 
-                // Creamos el objeto BasaExternal
                 BasaExternal cotizacion = BasaExternal.builder()
                         .exchangeRate(exchangeRate)
                         .currencyCode(currencyCode)

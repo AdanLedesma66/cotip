@@ -1,11 +1,9 @@
-package py.com.cotip.external.cotipdb.entities;
+package py.com.cotip.external.cotipdb.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
 import py.com.cotip.external.cotipdb.config.CotipBaseEntity;
-
-import java.math.BigDecimal;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
