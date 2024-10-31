@@ -31,4 +31,11 @@ public class CotipApi {
     public ResponseEntity gnb() throws Exception {
         return ResponseEntity.ok(action.findGnbCotizacionResponse());
     }
+
+    @GetMapping("/basa")
+    public ResponseEntity basa() throws Exception{
+        return ResponseEntity.ok(action.findBasaCotizacionResponse());
+    }
+
+
 }

@@ -21,9 +21,9 @@ public class CotipEntity extends CotipBaseEntity {
 
     private String currencyCode;
 
-    private BigDecimal buyRate;
+    private long buyRate;
 
-    private BigDecimal sellRate;
+    private long sellRate;
 
 
 }

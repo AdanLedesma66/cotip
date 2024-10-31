@@ -5,9 +5,11 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
+import py.com.cotip.application.rest.model.BasaDto;
 import py.com.cotip.application.rest.model.FamiliarDto;
 import py.com.cotip.application.rest.model.GnbDto;
 import py.com.cotip.domain.commons.TipoProveedor;
+import py.com.cotip.domain.mapper.BasaDomainMapper;
 import py.com.cotip.domain.mapper.ContinentalDomainMapper;
 import py.com.cotip.domain.mapper.FamiliarDomainMapper;
 import py.com.cotip.domain.port.in.CotipInPort;
@@ -52,18 +54,8 @@ public class CotipService implements CotipInPort {
         List<ContinentalExternal> cotizacionExternals = cotipOutPort.findContinentalCotizacion();
 
         var continentalResponseList = ContinentalDomainMapper.INSTANCE.externalToListResponse(cotizacionExternals);
-        log.info("Se ajustan algunos datos de la cotizacion obtenida");
         continentalResponseList.forEach(cotizacion -> {
-            switch (cotizacion.getExchangeRate()) {
-                case "DOLAR CHQ./TRANSF.":
-                    cotizacion.setCurrencyCode("USD");
-                    break;
-                case "EURO CHQ./TRANSF.":
-                    cotizacion.setCurrencyCode("EUR");
-                    break;
-            }
-            cotizacion.setCurrencyCode(cotizacion.getCurrencyCode().trim());
-        log.info("Guardamos las cotizaciones");
+            log.info("Guardamos las cotizaciones");
             saveCotipEntity(CotipDbMapper.INSTANCE.toContinentalResponse(cotizacion), TipoProveedor.BANCO_CONTINENTAL.getDescription());
         });
 
@@ -75,22 +67,7 @@ public class CotipService implements CotipInPort {
     public List<FamiliarDto> findFamiliarCotizacionResponse() throws Exception {
         var familiarDtoList = FamiliarDomainMapper.INSTANCE.toListFamiliarDto(cotipOutPort.findFamiliarCotizacion());
 
-        log.info("Se ajustan algunos datos de la cotizacion obtenida");
         familiarDtoList.forEach(cotizacion -> {
-            switch (cotizacion.getExchangeRate()) {
-                case "Dólar Efectivo", "Dólar Cheque / Transferencia":
-                    cotizacion.setCurrencyCode("USD");
-                    break;
-                case "Peso Argentino":
-                    cotizacion.setCurrencyCode("ARS");
-                    break;
-                case "Real Brasileño":
-                    cotizacion.setCurrencyCode("BRL");
-                    break;
-                case "Euro Efectivo", "Euro Transferencia":
-                    cotizacion.setCurrencyCode("EUR");
-                    break;
-            }
             log.info("Guardamos las cotizaciones");
             saveCotipEntity(CotipDbMapper.INSTANCE.toFamiliarDto(cotizacion), TipoProveedor.BANCO_FAMILIAR.getDescription());
         });
@@ -101,6 +78,19 @@ public class CotipService implements CotipInPort {
     @Override
     public List<GnbDto> findGnbCotizacionResponse() throws Exception {
         return null;
+    }
+
+    @Cacheable(value = "basa", key = "'basaResponse'")
+    @Override
+    public List<BasaDto> findBasaCotizacionResponse() throws Exception {
+        var basaDtoList = BasaDomainMapper.INSTANCE.toListBasaDto(cotipOutPort.findBasaCotizacion());
+
+        basaDtoList.forEach(cotizacion -> {
+            log.info("Guardamos las cotizaciones");
+            saveCotipEntity(CotipDbMapper.INSTANCE.toBasaDto(cotizacion), TipoProveedor.BANCO_BASA.getDescription());
+        });
+
+        return basaDtoList;
     }
 
     // ::: externals
