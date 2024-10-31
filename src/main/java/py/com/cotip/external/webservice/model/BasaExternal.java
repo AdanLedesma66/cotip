@@ -1,15 +1,13 @@
-package py.com.cotip.domain.port.out.response;
+package py.com.cotip.external.webservice.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Data
 @Builder
-@AllArgsConstructor
-public class FamiliarResponse {
+public class BasaExternal {
+
+    // ::: vars
 
     private String exchangeRate;
     private String currencyCode;

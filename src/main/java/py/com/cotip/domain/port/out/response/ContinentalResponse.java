@@ -15,11 +15,8 @@ public class ContinentalResponse {
     // ::: vars
 
     private String exchangeRate;
-
     private String currencyCode;
-
-    private BigDecimal buyRate;
-
-    private BigDecimal sellRate;
+    private long buyRate;
+    private long sellRate;
 
 }
