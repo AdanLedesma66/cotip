@@ -7,7 +7,6 @@ import java.util.List;
 
 public interface CotipDbOutPort {
 
-    CotipEntity saveCotipEntity(CotipEntity cotipEntity);
-
     List<CotipEntity> saveAllCotipEntity(List<CotipEntity> cotipEntities, TipoProveedor tipoProveedor);
+
 }

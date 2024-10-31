@@ -18,11 +18,6 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
     private CotipRepository cotipRepository;
 
     @Override
-    public CotipEntity saveCotipEntity(CotipEntity cotipEntity) {
-        return cotipRepository.save(cotipEntity);
-    }
-
-    @Override
     public List<CotipEntity> saveAllCotipEntity(List<CotipEntity> cotipEntities, TipoProveedor tipoProveedor) {
 
         cotipEntities.forEach(cotipEntity -> {

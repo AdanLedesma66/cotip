@@ -21,9 +21,7 @@ import py.com.cotip.domain.port.out.response.ContinentalResponse;
 import py.com.cotip.external.cotipdb.entities.CotipEntity;
 import py.com.cotip.external.cotipdb.mapper.CotipDbMapper;
 
-import java.time.OffsetDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Slf4j
 public class CotipService implements CotipInPort {
@@ -112,15 +110,6 @@ public class CotipService implements CotipInPort {
         } catch (Exception e) {
             log.error("Error al cargar las cotizaciones diarias: ", e);
         }
-    }
-
-    private void saveCotipEntity(CotipEntity cotizacion, String provider) {
-
-        cotizacion.setId(UUID.randomUUID());
-        cotizacion.setProvider(provider);
-        cotizacion.setUploadDate(OffsetDateTime.now());
-
-        cotipDbOutPort.saveCotipEntity(cotizacion);
     }
 
     private void saveAllCotipEntities(List<CotipEntity> cotipEntities, TipoProveedor tipoProveedor) {
