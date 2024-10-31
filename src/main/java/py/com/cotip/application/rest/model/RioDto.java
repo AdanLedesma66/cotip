@@ -5,13 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FamiliarDto {
+public class RioDto {
 
     // ::: vars
 
@@ -19,5 +17,4 @@ public class FamiliarDto {
     private String currencyCode;
     private Long buyRate;
     private Long sellRate;
-
 }

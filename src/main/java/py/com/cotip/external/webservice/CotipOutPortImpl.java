@@ -11,20 +11,18 @@ import org.jsoup.select.Elements;
 import py.com.cotip.domain.port.out.CotipOutPort;
 import py.com.cotip.domain.port.out.response.FamiliarResponse;
 import py.com.cotip.external.webservice.config.CotipProperties;
-import py.com.cotip.external.webservice.model.ContinentalBearerExternal;
-import py.com.cotip.external.webservice.model.ContinentalExternal;
-import py.com.cotip.external.webservice.model.GnbExternal;
-import py.com.cotip.external.webservice.util.CurrencyUtil;
+import py.com.cotip.external.webservice.model.*;
+import py.com.cotip.external.webservice.util.CurrencyUtils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @AllArgsConstructor
@@ -86,13 +84,14 @@ public class CotipOutPortImpl implements CotipOutPort {
                     });
 
             cotizacionExternal.forEach(cotizacion -> {
-                BigDecimal buyRate = CurrencyUtil.convertRate(cotizacion.getBuyRate());
-                BigDecimal sellRate = CurrencyUtil.convertRate(cotizacion.getSellRate());
+                String exchangeRate = cotizacion.getExchangeRate();
+                String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
+                String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(standardizedExchangeRate));
 
-                // Asignar los valores transformados
-                cotizacion.setBuyRate(buyRate);
-                cotizacion.setSellRate(sellRate);
+                cotizacion.setExchangeRate(standardizedExchangeRate);
+                cotizacion.setCurrencyCode(standardizedCurrencyCode);
             });
+
             log.info("La llamada se ejecuto con exito");
             return cotizacionExternal;
         } catch (IOException | InterruptedException e) {
@@ -121,10 +120,17 @@ public class CotipOutPortImpl implements CotipOutPort {
                     BigDecimal buyRate = new BigDecimal(row.select("td").get(1).text().replace(",", ""));
                     BigDecimal sellRate = new BigDecimal(row.select("td").get(2).text().replace(",", ""));
 
+                    long buyRateLong = buyRate.multiply(BigDecimal.valueOf(1000)).longValue();
+                    long sellRateLong = sellRate.multiply(BigDecimal.valueOf(1000)).longValue();
+
+                    String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
+                    String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(standardizedExchangeRate));
+
                     FamiliarResponse cotizacion = FamiliarResponse.builder()
-                            .exchangeRate(exchangeRate)
-                            .buyRate(buyRate)
-                            .sellRate(sellRate)
+                            .exchangeRate(standardizedExchangeRate)
+                            .currencyCode(standardizedCurrencyCode)
+                            .buyRate(buyRateLong)
+                            .sellRate(sellRateLong)
                             .build();
                     cotizaciones.add(cotizacion);
                 }
@@ -142,5 +148,86 @@ public class CotipOutPortImpl implements CotipOutPort {
     public List<GnbExternal> findGnbCotizacion() throws Exception {
         return null;
     }
+
+    @Override
+    public List<BasaExternal> findBasaCotizacion() throws Exception {
+        log.info("Obteniendo cotización del Banco Basa");
+        List<BasaExternal> cotizaciones = new ArrayList<>();
+
+        try {
+            log.info("Scrapeando datos de la cotización del Banco Basa");
+            Document doc = Jsoup.connect(cotipProperties.getBasaPath()).get();
+
+            Element cotizacionesSection = doc.selectFirst("h2:contains(Cotización de monedas)").parent().parent();
+            Elements cotizacionElements = cotizacionesSection.select(".cta-buttons a");
+
+            for (Element element : cotizacionElements) {
+                String altText = element.select("img").attr("alt");
+                String[] rateParts = altText.split("\\|");
+
+                String srcText = element.select("img").attr("src");
+                String exchangeRate = CurrencyUtils.getStandardizedExchangeRateNameFromImageSrc(srcText);
+                String currencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(exchangeRate));
+
+                long buyRate = new BigDecimal(rateParts[0].replace("Compra", "").trim().replace(".", "")).longValue();
+                long sellRate = new BigDecimal(rateParts[1].replace("Venta", "").trim().replace(".", "")).longValue();
+
+                BasaExternal cotizacion = BasaExternal.builder()
+                        .exchangeRate(exchangeRate)
+                        .currencyCode(currencyCode)
+                        .buyRate(buyRate)
+                        .sellRate(sellRate)
+                        .build();
+                cotizaciones.add(cotizacion);
+            }
+
+            log.info("Cotización obtenida exitosamente.");
+        } catch (IOException e) {
+            log.error("Error al obtener las cotizaciones de Banco Basa", e);
+            throw new Exception("Error al obtener las cotizaciones de Banco Basa");
+        }
+
+        return cotizaciones;
+    }
+
+    @Override
+    public List<RioExternal> findRioCotizacion() throws Exception {
+        log.info("Obteniendo cotizacion del banco continental");
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(cotipProperties.getRioPath()))
+                .header("Accept", "application/json")
+                .header("x-xsrf-token", "eyJpdiI6IjlFWjJhcGpLRU92REhmUW5BOFNtM0E9PSIsInZhbHVlIjoia09aZkw2bkNRODV4UHEwYjhzcTdHSGV3bVRtUFBKNFZ3U1FySi9WSTlxUGxkRWw1SWs5LytTam9JOXBhUExOWEdiSTRNY0xmTEQ2TnBvNWhOa0VLekZpU3ZEUUlYSXFoMWoxallrRjVuVFp3UXRueVcyb2IzZVlQNWRSaWRpcWkiLCJtYWMiOiIzNWU5MGQxNGI5YTcxODE0ZDNkOWNkNmQ0YThhYWQxN2YyZGQyYzFhZTVmODYyNzU0MGRmNDdkNTk4ZTg2MjMwIiwidGFnIjoiIn0=")
+                .header("x-csrf-token", "xcZ8gj8H3yegoQ5It3O6DhJxeeyELZJxVwOV7eaZ")
+                .header("x-requested-with", "XMLHttpRequest")
+                .GET()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<RioExternal> rioExternalList = objectMapper.readValue(response.body(),
+                    new TypeReference<>() {
+                    });
+
+            rioExternalList.forEach(cotizacion -> {
+                String exchangeRate = cotizacion.getExchangeRate().trim();
+                String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
+                String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull
+                        (standardizedExchangeRate));
+
+                cotizacion.setExchangeRate(standardizedExchangeRate);
+                cotizacion.setCurrencyCode(standardizedCurrencyCode);
+
+            });
+
+            log.info("La llamada se ejecuto con exito");
+            return rioExternalList;
+        } catch (IOException | InterruptedException e) {
+            log.error("Error al obtener las cotizaciones de Banco Rio", e);
+            throw new Exception("Error al obtener las cotizaciones del Banco Rio");
+        }
+    }
+
 
 }
