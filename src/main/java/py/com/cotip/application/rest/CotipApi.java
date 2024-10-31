@@ -37,5 +37,10 @@ public class CotipApi {
         return ResponseEntity.ok(action.findBasaCotizacionResponse());
     }
 
+    @GetMapping("/banco-rio")
+    public ResponseEntity bancoRio() throws Exception{
+        return ResponseEntity.ok(action.findRioCotizacionResponse());
+    }
+
 
 }

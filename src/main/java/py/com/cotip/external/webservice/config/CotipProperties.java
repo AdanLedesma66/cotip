@@ -26,4 +26,7 @@ public class CotipProperties {
     @Value("${cotizacion.basa.path}")
     private String basaPath;
 
+    @Value("${cotizacion.rio.path}")
+    private String rioPath;
+
 }

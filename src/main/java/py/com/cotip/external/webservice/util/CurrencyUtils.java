@@ -38,12 +38,14 @@ public class CurrencyUtils {
             case "DÓLAR EFECTIVO":
             case "DOLAR EFECTIVO":
             case "DOLAR AMERICANO":
+            case "DOLAR":
             case "USD":
                 return "Dólar Americano";
             case "DÓLAR CHEQUE / TRANSFERENCIA":
             case "DOLAR CHQ./TRANSF.":
                 return "Dólar Cheque / Transferencia";
             case "PESO ARGENTINO":
+            case "PESO":
             case "ARS":
                 return "Peso Argentino";
             case "REAL BRASILEÑO":
@@ -52,6 +54,7 @@ public class CurrencyUtils {
                 return "Real Brasileño";
             case "EURO EFECTIVO":
             case "EUR EFECTIVO":
+            case "EURO":
                 return "Euro Efectivo";
             case "EURO TRANSFERENCIA":
             case "EURO CHQ./TRANSF.":

@@ -11,10 +11,7 @@ import org.jsoup.select.Elements;
 import py.com.cotip.domain.port.out.CotipOutPort;
 import py.com.cotip.domain.port.out.response.FamiliarResponse;
 import py.com.cotip.external.webservice.config.CotipProperties;
-import py.com.cotip.external.webservice.model.BasaExternal;
-import py.com.cotip.external.webservice.model.ContinentalBearerExternal;
-import py.com.cotip.external.webservice.model.ContinentalExternal;
-import py.com.cotip.external.webservice.model.GnbExternal;
+import py.com.cotip.external.webservice.model.*;
 import py.com.cotip.external.webservice.util.CurrencyUtils;
 
 import java.io.IOException;
@@ -192,6 +189,45 @@ public class CotipOutPortImpl implements CotipOutPort {
         }
 
         return cotizaciones;
+    }
+
+    @Override
+    public List<RioExternal> findRioCotizacion() throws Exception {
+        log.info("Obteniendo cotizacion del banco continental");
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(cotipProperties.getRioPath()))
+                .header("Accept", "application/json")
+                .header("x-xsrf-token", "eyJpdiI6IjlFWjJhcGpLRU92REhmUW5BOFNtM0E9PSIsInZhbHVlIjoia09aZkw2bkNRODV4UHEwYjhzcTdHSGV3bVRtUFBKNFZ3U1FySi9WSTlxUGxkRWw1SWs5LytTam9JOXBhUExOWEdiSTRNY0xmTEQ2TnBvNWhOa0VLekZpU3ZEUUlYSXFoMWoxallrRjVuVFp3UXRueVcyb2IzZVlQNWRSaWRpcWkiLCJtYWMiOiIzNWU5MGQxNGI5YTcxODE0ZDNkOWNkNmQ0YThhYWQxN2YyZGQyYzFhZTVmODYyNzU0MGRmNDdkNTk4ZTg2MjMwIiwidGFnIjoiIn0=")
+                .header("x-csrf-token", "xcZ8gj8H3yegoQ5It3O6DhJxeeyELZJxVwOV7eaZ")
+                .header("x-requested-with", "XMLHttpRequest")
+                .GET()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<RioExternal> rioExternalList = objectMapper.readValue(response.body(),
+                    new TypeReference<>() {
+                    });
+
+            rioExternalList.forEach(cotizacion -> {
+                String exchangeRate = cotizacion.getExchangeRate().trim();
+                String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
+                String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull
+                        (standardizedExchangeRate));
+
+                cotizacion.setExchangeRate(standardizedExchangeRate);
+                cotizacion.setCurrencyCode(standardizedCurrencyCode);
+
+            });
+
+            log.info("La llamada se ejecuto con exito");
+            return rioExternalList;
+        } catch (IOException | InterruptedException e) {
+            log.error("Error al obtener las cotizaciones de Banco Rio", e);
+            throw new Exception("Error al obtener las cotizaciones del Banco Rio");
+        }
     }
 
 
