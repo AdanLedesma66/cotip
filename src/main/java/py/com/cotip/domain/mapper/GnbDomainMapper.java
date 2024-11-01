@@ -6,14 +6,13 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import py.com.cotip.application.rest.model.GnbDto;
 import py.com.cotip.external.webservice.model.GnbExternal;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
 public interface GnbDomainMapper {
 
-    // ::: INSTANCE
+  // ::: INSTANCE
 
     GnbDomainMapper INSTANCE = Mappers.getMapper(GnbDomainMapper.class);
 

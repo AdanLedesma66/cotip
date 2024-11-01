@@ -16,4 +16,5 @@ public class GnbDto {
     private Long buyRate;
     private Long sellRate;
 
+
 }
