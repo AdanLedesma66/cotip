@@ -146,7 +146,36 @@ public class CotipOutPortImpl implements CotipOutPort {
 
     @Override
     public List<GnbExternal> findGnbCotizacion() throws Exception {
-        return null;
+        log.info("Obteniendo cotizacion del banco gnb");
+        HttpClient client = HttpClient.newHttpClient();
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(cotipProperties.getGnbPath()))
+                .GET()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            ListadoGbnExternal listadoGbnExternal = objectMapper.readValue(response.body(),
+                    new TypeReference<>() {
+                    });
+
+            listadoGbnExternal.getExchangeRates().forEach(cotizacion -> {
+                String exchangeRate = cotizacion.getCurrencyDesc();
+                String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
+                String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(standardizedExchangeRate));
+
+                cotizacion.setCurrencyDesc(standardizedExchangeRate);
+                cotizacion.setCurrencyCode(standardizedCurrencyCode);
+
+            });
+
+            log.info("La llamada se ejecuto con exito");
+            return listadoGbnExternal.getExchangeRates();
+        } catch (IOException | InterruptedException e) {
+            log.error("Error al obtener las cotizaciones de Banco Continental", e);
+            throw new Exception("Error al obtener las cotizaciones del Banco Continental");
+        }
     }
 
     @Override

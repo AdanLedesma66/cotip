@@ -55,6 +55,7 @@ public class CurrencyUtils {
             case "EURO EFECTIVO":
             case "EUR EFECTIVO":
             case "EURO":
+            case "EUR":
                 return "Euro Efectivo";
             case "EURO TRANSFERENCIA":
             case "EURO CHQ./TRANSF.":

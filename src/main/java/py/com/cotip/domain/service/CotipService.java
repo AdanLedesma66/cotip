@@ -10,10 +10,7 @@ import py.com.cotip.application.rest.model.FamiliarDto;
 import py.com.cotip.application.rest.model.GnbDto;
 import py.com.cotip.application.rest.model.RioDto;
 import py.com.cotip.domain.commons.TipoProveedor;
-import py.com.cotip.domain.mapper.BasaDomainMapper;
-import py.com.cotip.domain.mapper.ContinentalDomainMapper;
-import py.com.cotip.domain.mapper.FamiliarDomainMapper;
-import py.com.cotip.domain.mapper.RioDomainMapper;
+import py.com.cotip.domain.mapper.*;
 import py.com.cotip.domain.port.in.CotipInPort;
 import py.com.cotip.domain.port.out.CotipDbOutPort;
 import py.com.cotip.domain.port.out.CotipOutPort;
@@ -71,7 +68,12 @@ public class CotipService implements CotipInPort {
 
     @Override
     public List<GnbDto> findGnbCotizacionResponse() throws Exception {
-        return null;
+        var listGnbDto = GnbDomainMapper.INSTANCE.toListGnbDto(cotipOutPort.findGnbCotizacion());
+
+        log.info("Guardamos las cotizaciones");
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListGnbDto(listGnbDto), TipoProveedor.BANCO_GNB);
+
+        return listGnbDto;
     }
 
     @Cacheable(value = "basa", key = "'basaResponse'")
