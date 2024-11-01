@@ -1,30 +1,32 @@
 package py.com.cotip.external.webservice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-
-
+import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GnbExternal {
 
-    private String currencyCode;
-    private BigDecimal electronicSellPrice;
-    private BigDecimal electronicBuyPrice;
+    // ::: vars
 
-    /*
-    *         {
-            "currencyCode": "USD",
-            "electronicSellPrice": "7960.00",
-            "electronicBuyPrice": "7810.00",
-            "currencyDesc": "DOLAR AMERICANO",
-            "currencyAbbreviation": "DOLAR",
-            "cashBuyPrice": "7710.00",
-            "checkSellPrice": "",
-            "checkBuyPrice": "",
-            "cashSellPrice": "7980.00",
-            "order": 1
-        },*/
+    private String currencyCode;
+    private String electronicSellPrice;
+    private String electronicBuyPrice;
+    private String currencyDesc;
+    private String currencyAbbreviation;
+    private String cashBuyPrice;
+    private String checkSellPrice;
+    private String checkBuyPrice;
+    private Integer order;
 
 }
