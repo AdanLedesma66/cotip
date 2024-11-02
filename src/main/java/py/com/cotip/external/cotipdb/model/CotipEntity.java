@@ -1,6 +1,8 @@
 package py.com.cotip.external.cotipdb.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.*;
 import py.com.cotip.domain.commons.RateChange;
@@ -24,8 +26,10 @@ public class CotipEntity extends CotipBaseEntity {
 
     private Long sellRate;
 
+    @Enumerated(EnumType.STRING)
     private RateChange buyRateStatus;
 
+    @Enumerated(EnumType.STRING)
     private RateChange sellRateStatus;
 
 
