@@ -15,4 +15,6 @@ public interface FamiliarDomainMapper {
     FamiliarDto toFamiliarDto(FamiliarResponse familiarResponse);
 
     List<FamiliarDto> toListFamiliarDto(List<FamiliarResponse> familiarResponses);
+
+
 }

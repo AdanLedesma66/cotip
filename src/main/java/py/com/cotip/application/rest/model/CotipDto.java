@@ -12,7 +12,7 @@ import java.time.OffsetDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class FamiliarDto {
+public class CotipDto {
 
     // ::: vars
 
@@ -20,5 +20,11 @@ public class FamiliarDto {
     private String currencyCode;
     private Long buyRate;
     private Long sellRate;
-
+    private RateChange buyRateStatus;
+    private RateChange sellRateStatus;
+    private boolean enabled;
+    private String provider;
+    private String location;
+    private String city;
+    private OffsetDateTime lastUpdated;
 }
