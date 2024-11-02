@@ -9,4 +9,6 @@ public interface CotipDbOutPort {
 
     List<CotipEntity> saveAllCotipEntity(List<CotipEntity> cotipEntities, TipoProveedor tipoProveedor);
 
+    List<CotipEntity> findAllByProviderOrderByUploadDate(String tipoProvedor);
+
 }

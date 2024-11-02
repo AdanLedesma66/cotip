@@ -20,6 +20,8 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
 
     private CotipRepository cotipRepository;
 
+    // ::: impls
+
     @Override
     public List<CotipEntity> saveAllCotipEntity(List<CotipEntity> cotipEntities, TipoProveedor tipoProveedor) {
 
@@ -45,6 +47,11 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
         });
 
         return cotipRepository.saveAll(cotipEntities);
+    }
+
+    @Override
+    public List<CotipEntity> findAllByProviderOrderByUploadDate(String tipoProvedor) {
+        return cotipRepository.findAllByProviderOrderByUploadDate(tipoProvedor);
     }
 
     // ::: externals

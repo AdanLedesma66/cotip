@@ -63,7 +63,9 @@ public class CotipService implements CotipInPort {
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListFamiliarDto(familiarDtoList), TipoProveedor.BANCO_FAMILIAR);
 
-        return familiarDtoList;
+        log.info("Obtenemos la ultima cotizacion guardada");
+        return FamiliarDomainMapper.INSTANCE.toListFamiliarEntities(
+                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_FAMILIAR.getDescription()));
     }
 
     @Cacheable(value = "gnb", key = "'gnbResponse'")

@@ -4,8 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import py.com.cotip.domain.commons.RateChange;
 
-import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 @Data
 @Builder
@@ -19,5 +20,12 @@ public class FamiliarDto {
     private String currencyCode;
     private Long buyRate;
     private Long sellRate;
+    private RateChange buyRateStatus;
+    private RateChange sellRateStatus;
+    private boolean enabled;
+    private String provider;
+    private String location;
+    private OffsetDateTime uploadDate;
+
 
 }
