@@ -5,15 +5,14 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
-import py.com.cotip.application.rest.model.*;
+import py.com.cotip.application.rest.model.CotipDto;
 import py.com.cotip.domain.commons.TipoProveedor;
 import py.com.cotip.domain.mapper.*;
 import py.com.cotip.domain.port.in.CotipInPort;
 import py.com.cotip.domain.port.out.CotipDbOutPort;
 import py.com.cotip.domain.port.out.CotipOutPort;
-import py.com.cotip.domain.port.out.response.ContinentalResponse;
-import py.com.cotip.external.cotipdb.model.CotipEntity;
 import py.com.cotip.external.cotipdb.mapper.CotipDbMapper;
+import py.com.cotip.external.cotipdb.model.CotipEntity;
 
 import java.util.List;
 
@@ -80,17 +79,6 @@ public class CotipService implements CotipInPort {
                 cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_GNB.getDescription()));
     }
 
-    @Cacheable(value = "basa", key = "'basaResponse'")
-    @Override
-    public List<BasaDto> findBasaCotizacionResponse() throws Exception {
-        var basaDtoList = BasaDomainMapper.INSTANCE.toListBasaDto(cotipOutPort.findBasaCotizacion());
-
-        log.info("Guardamos las cotizaciones");
-        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListBasaDto(basaDtoList), TipoProveedor.BANCO_BASA);
-
-        return basaDtoList;
-    }
-
     @Cacheable(value = "rio", key = "'rioResponse'")
     @Override
     public List<CotipDto> findRioCotizacionResponse() throws Exception {
@@ -113,7 +101,6 @@ public class CotipService implements CotipInPort {
             getSelf().findCotizacionContinentalResponse();
             getSelf().findFamiliarCotizacionResponse();
             getSelf().findGnbCotizacionResponse();
-            getSelf().findBasaCotizacionResponse();
             getSelf().findRioCotizacionResponse();
         } catch (Exception e) {
             log.error("Error al cargar las cotizaciones diarias: ", e);

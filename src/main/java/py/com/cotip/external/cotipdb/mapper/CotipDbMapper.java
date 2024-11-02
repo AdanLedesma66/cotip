@@ -2,7 +2,6 @@ package py.com.cotip.external.cotipdb.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import py.com.cotip.application.rest.model.BasaDto;
 import py.com.cotip.application.rest.model.FamiliarDto;
 import py.com.cotip.application.rest.model.GnbDto;
 import py.com.cotip.application.rest.model.RioDto;
@@ -23,10 +22,6 @@ public interface CotipDbMapper {
     CotipEntity toContinentalResponse(ContinentalResponse continentalResponse);
 
     List<CotipEntity> toListContinentalResponse(List<ContinentalResponse> continentalResponse);
-
-    CotipEntity toBasaDto(BasaDto basaDto);
-
-    List<CotipEntity> toListBasaDto(List<BasaDto> basaDto);
 
     CotipEntity toRioDto(RioDto rioDto);
 
