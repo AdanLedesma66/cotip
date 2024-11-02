@@ -5,10 +5,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
-import py.com.cotip.application.rest.model.BasaDto;
-import py.com.cotip.application.rest.model.FamiliarDto;
-import py.com.cotip.application.rest.model.GnbDto;
-import py.com.cotip.application.rest.model.RioDto;
+import py.com.cotip.application.rest.model.*;
 import py.com.cotip.domain.commons.TipoProveedor;
 import py.com.cotip.domain.mapper.*;
 import py.com.cotip.domain.port.in.CotipInPort;
@@ -38,6 +35,7 @@ public class CotipService implements CotipInPort {
     }
 
     // ::: service se inyecta asi mismo para obtener las respuestas cacheadas
+
     private CotipService getSelf() {
         return applicationContext.getBean(CotipService.class);
     }
@@ -46,37 +44,40 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "continental", key = "'continentalResponse'")
     @Override
-    public List<ContinentalResponse> findCotizacionContinentalResponse() throws Exception {
+    public List<CotipDto> findCotizacionContinentalResponse() throws Exception {
         var continentalResponseList = ContinentalDomainMapper.INSTANCE.externalToListResponse(cotipOutPort.findContinentalCotizacion());
 
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListContinentalResponse(continentalResponseList), TipoProveedor.BANCO_CONTINENTAL);
 
-        return continentalResponseList;
-    }
+        log.info("Obtenemos la ultima cotizacion guardada");
+        return CotipDomainMapper.INSTANCE.toListCotipDto(
+                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_FAMILIAR.getDescription()));    }
 
     @Cacheable(value = "familiar", key = "'familiarResponse'")
     @Override
-    public List<FamiliarDto> findFamiliarCotizacionResponse() throws Exception {
+    public List<CotipDto> findFamiliarCotizacionResponse() throws Exception {
         var familiarDtoList = FamiliarDomainMapper.INSTANCE.toListFamiliarDto(cotipOutPort.findFamiliarCotizacion());
 
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListFamiliarDto(familiarDtoList), TipoProveedor.BANCO_FAMILIAR);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        return FamiliarDomainMapper.INSTANCE.toListFamiliarEntities(
+        return CotipDomainMapper.INSTANCE.toListCotipDto(
                 cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_FAMILIAR.getDescription()));
     }
 
     @Cacheable(value = "gnb", key = "'gnbResponse'")
     @Override
-    public List<GnbDto> findGnbCotizacionResponse() throws Exception {
+    public List<CotipDto> findGnbCotizacionResponse() throws Exception {
         var listGnbDto = GnbDomainMapper.INSTANCE.toListGnbDto(cotipOutPort.findGnbCotizacion());
 
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListGnbDto(listGnbDto), TipoProveedor.BANCO_GNB);
 
-        return listGnbDto;
+        log.info("Obtenemos la ultima cotizacion guardada");
+        return CotipDomainMapper.INSTANCE.toListCotipDto(
+                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_GNB.getDescription()));
     }
 
     @Cacheable(value = "basa", key = "'basaResponse'")
@@ -92,13 +93,15 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "rio", key = "'rioResponse'")
     @Override
-    public List<RioDto> findRioCotizacionResponse() throws Exception {
+    public List<CotipDto> findRioCotizacionResponse() throws Exception {
         var rioDtoList = RioDomainMapper.INSTANCE.toListRioDto(cotipOutPort.findRioCotizacion());
 
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListRioDto(rioDtoList), TipoProveedor.BANCO_RIO);
 
-        return rioDtoList;
+        log.info("Obtenemos la ultima cotizacion guardada");
+        return CotipDomainMapper.INSTANCE.toListCotipDto(
+                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_FAMILIAR.getDescription()));
     }
 
     // ::: externals

@@ -2,23 +2,20 @@ package py.com.cotip.domain.port.in;
 
 
 import py.com.cotip.application.rest.model.BasaDto;
-import py.com.cotip.application.rest.model.FamiliarDto;
-import py.com.cotip.application.rest.model.GnbDto;
-import py.com.cotip.application.rest.model.RioDto;
-import py.com.cotip.domain.port.out.response.ContinentalResponse;
+import py.com.cotip.application.rest.model.CotipDto;
 
 import java.util.List;
 
 public interface CotipInPort {
 
-    List<ContinentalResponse> findCotizacionContinentalResponse() throws Exception;
+    List<CotipDto> findCotizacionContinentalResponse() throws Exception;
 
-    List<FamiliarDto> findFamiliarCotizacionResponse() throws Exception;
+    List<CotipDto> findFamiliarCotizacionResponse() throws Exception;
 
-    List<GnbDto> findGnbCotizacionResponse() throws Exception;
+    List<CotipDto> findGnbCotizacionResponse() throws Exception;
 
     List<BasaDto> findBasaCotizacionResponse() throws Exception;
 
-    List<RioDto> findRioCotizacionResponse() throws Exception;
+    List<CotipDto> findRioCotizacionResponse() throws Exception;
 
 }

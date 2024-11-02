@@ -2,6 +2,8 @@ package py.com.cotip.external.cotipdb.config;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +29,14 @@ public class CotipBaseEntity implements Serializable {
 
     private String location;
 
+    private String city;
+
     private OffsetDateTime uploadDate;
+
+    @PrePersist
+    @PreUpdate
+    public void updateTimestamp() {
+        this.uploadDate = OffsetDateTime.now();
+    }
 
 }

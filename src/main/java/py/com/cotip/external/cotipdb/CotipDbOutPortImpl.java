@@ -8,8 +8,6 @@ import py.com.cotip.domain.port.out.CotipDbOutPort;
 import py.com.cotip.external.cotipdb.model.CotipEntity;
 import py.com.cotip.external.cotipdb.repository.CotipRepository;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,7 +31,6 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
             cotipEntity.setId(UUID.randomUUID());
             cotipEntity.setEnabled(true);
             cotipEntity.setProvider(tipoProveedor.getDescription());
-            cotipEntity.setUploadDate(OffsetDateTime.now());
 
             if (lastCotipEntity.isPresent()) {
                 CotipEntity previousCotip = lastCotipEntity.get();
