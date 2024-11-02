@@ -66,6 +66,7 @@ public class CotipService implements CotipInPort {
         return familiarDtoList;
     }
 
+    @Cacheable(value = "gnb", key = "'gnbResponse'")
     @Override
     public List<GnbDto> findGnbCotizacionResponse() throws Exception {
         var listGnbDto = GnbDomainMapper.INSTANCE.toListGnbDto(cotipOutPort.findGnbCotizacion());
