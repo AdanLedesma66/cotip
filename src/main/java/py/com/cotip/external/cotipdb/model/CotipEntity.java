@@ -3,6 +3,7 @@ package py.com.cotip.external.cotipdb.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
+import py.com.cotip.domain.commons.RateChange;
 import py.com.cotip.external.cotipdb.config.CotipBaseEntity;
 
 @EqualsAndHashCode(callSuper = true)
@@ -19,9 +20,13 @@ public class CotipEntity extends CotipBaseEntity {
 
     private String currencyCode;
 
-    private long buyRate;
+    private Long buyRate;
 
-    private long sellRate;
+    private Long sellRate;
+
+    private RateChange buyRateStatus;
+
+    private RateChange sellRateStatus;
 
 
 }

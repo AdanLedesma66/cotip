@@ -21,7 +21,11 @@ public class CotipBaseEntity implements Serializable {
     @Id
     private UUID id;
 
+    private boolean enabled;
+
     private String provider;
+
+    private String location;
 
     private OffsetDateTime uploadDate;
 
