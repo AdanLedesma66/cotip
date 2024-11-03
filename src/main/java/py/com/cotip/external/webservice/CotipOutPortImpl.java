@@ -1,7 +1,9 @@
 package py.com.cotip.external.webservice;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -9,6 +11,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import py.com.cotip.domain.port.out.CotipOutPort;
+import py.com.cotip.domain.port.out.response.CotipOutResponse;
 import py.com.cotip.domain.port.out.response.FamiliarResponse;
 import py.com.cotip.external.webservice.config.CotipProperties;
 import py.com.cotip.external.webservice.model.*;
@@ -179,47 +182,6 @@ public class CotipOutPortImpl implements CotipOutPort {
     }
 
     @Override
-    public List<BasaExternal> findBasaCotizacion() throws Exception {
-        log.info("Obteniendo cotización del Banco Basa");
-        List<BasaExternal> cotizaciones = new ArrayList<>();
-
-        try {
-            log.info("Scrapeando datos de la cotización del Banco Basa");
-            Document doc = Jsoup.connect(cotipProperties.getBasaPath()).get();
-
-            Element cotizacionesSection = doc.selectFirst("h2:contains(Cotización de monedas)").parent().parent();
-            Elements cotizacionElements = cotizacionesSection.select(".cta-buttons a");
-
-            for (Element element : cotizacionElements) {
-                String altText = element.select("img").attr("alt");
-                String[] rateParts = altText.split("\\|");
-
-                String srcText = element.select("img").attr("src");
-                String exchangeRate = CurrencyUtils.getStandardizedExchangeRateNameFromImageSrc(srcText);
-                String currencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(exchangeRate));
-
-                long buyRate = new BigDecimal(rateParts[0].replace("Compra", "").trim().replace(".", "")).longValue();
-                long sellRate = new BigDecimal(rateParts[1].replace("Venta", "").trim().replace(".", "")).longValue();
-
-                BasaExternal cotizacion = BasaExternal.builder()
-                        .exchangeRate(exchangeRate)
-                        .currencyCode(currencyCode)
-                        .buyRate(buyRate)
-                        .sellRate(sellRate)
-                        .build();
-                cotizaciones.add(cotizacion);
-            }
-
-            log.info("Cotización obtenida exitosamente.");
-        } catch (IOException e) {
-            log.error("Error al obtener las cotizaciones de Banco Basa", e);
-            throw new Exception("Error al obtener las cotizaciones de Banco Basa");
-        }
-
-        return cotizaciones;
-    }
-
-    @Override
     public List<RioExternal> findRioCotizacion() throws Exception {
         log.info("Obteniendo cotizacion del banco continental");
         HttpClient client = HttpClient.newHttpClient();
@@ -256,6 +218,50 @@ public class CotipOutPortImpl implements CotipOutPort {
             log.error("Error al obtener las cotizaciones de Banco Rio", e);
             throw new Exception("Error al obtener las cotizaciones del Banco Rio");
         }
+    }
+
+    @Override
+    public List<CotipOutResponse> findSolarBankCotip() throws Exception {
+        List<CotipOutResponse> cotizaciones = new ArrayList<>();
+
+        try {
+            Document doc = Jsoup.connect(cotipProperties.getSolarBankPath()).get();
+
+            Element scriptElement = doc.selectFirst("script#__NEXT_DATA__");
+            if (scriptElement != null) {
+                String jsonData = scriptElement.html();
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(jsonData);
+
+                JsonNode quotationsNode = rootNode.path("props").path("pageProps").path("quotation");
+                if (quotationsNode.isArray()) {
+                    for (JsonNode node : quotationsNode) {
+                        String name = node.get("name").asText();
+                        long buyRate = new BigDecimal(node.get("bid_price").asText()).longValue();
+                        long sellRate = new BigDecimal(node.get("ask_price").asText()).longValue();
+
+                        String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(name);
+                        String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(standardizedExchangeRate));
+
+                        CotipOutResponse cotizacion = CotipOutResponse.builder()
+                                .exchangeRate(standardizedExchangeRate)
+                                .currencyCode(standardizedCurrencyCode)
+                                .buyRate(buyRate)
+                                .sellRate(sellRate)
+                                .build();
+
+                        cotizaciones.add(cotizacion);
+                    }
+                }
+            }
+            log.info("La llamada se ejecuto con exito");
+        } catch (IOException e) {
+            log.error("Error al obtener las cotizaciones de Banco Solar", e);
+            throw new Exception("Error al obtener las cotizaciones del Banco Solar");
+        }
+
+        return cotizaciones;
     }
 
 

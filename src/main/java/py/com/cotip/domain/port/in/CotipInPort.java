@@ -15,4 +15,6 @@ public interface CotipInPort {
 
     List<CotipDto> findRioCotizacionResponse() throws Exception;
 
+    List<CotipDto> findSolarBankCotip() throws Exception;
+
 }

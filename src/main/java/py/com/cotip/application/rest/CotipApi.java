@@ -36,6 +36,11 @@ public class CotipApi {
         return ResponseEntity.ok(action.findRioCotizacionResponse());
     }
 
+    @GetMapping("/banco-solar")
+    public ResponseEntity bancoSolar() throws Exception{
+        return ResponseEntity.ok(action.findSolarBankCotip());
+    }
+
 
 
 }

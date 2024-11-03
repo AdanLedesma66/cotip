@@ -50,6 +50,7 @@ public class CurrencyUtils {
                 return "Peso Argentino";
             case "REAL BRASILEÑO":
             case "REALES":
+            case "REAL":
             case "BRL":
                 return "Real Brasileño";
             case "EURO EFECTIVO":
