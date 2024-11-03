@@ -92,6 +92,19 @@ public class CotipService implements CotipInPort {
                 cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_FAMILIAR.getDescription()));
     }
 
+    @Cacheable(value = "solar", key = "'solarResponse'")
+    @Override
+    public List<CotipDto> findSolarBankCotip() throws Exception {
+        var cotipDtos = SolarBankDomainMapper.INSTANCE.toListDto(cotipOutPort.findSolarBankCotip());
+
+        log.info("Guardamos las cotizaciones");
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListCotipDto(cotipDtos), TipoProveedor.BANCO_SOLAR);
+
+        log.info("Obtenemos la ultima cotizacion guardada");
+        return CotipDomainMapper.INSTANCE.toListCotipDto(
+                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_SOLAR.getDescription()));
+    }
+
     // ::: externals
 
     @Scheduled(cron = "0 0 0 * * *")

@@ -1,5 +1,6 @@
 package py.com.cotip.domain.port.out;
 
+import py.com.cotip.domain.port.out.response.CotipOutResponse;
 import py.com.cotip.domain.port.out.response.FamiliarResponse;
 import py.com.cotip.domain.port.out.response.GnbResponse;
 import py.com.cotip.external.webservice.model.*;
@@ -16,10 +17,8 @@ public interface CotipOutPort {
 
     List<GnbExternal> findGnbCotizacion() throws Exception;
 
-    List<BasaExternal> findBasaCotizacion() throws Exception;
-
     List<RioExternal> findRioCotizacion() throws Exception;
 
-
+    List<CotipOutResponse> findSolarBankCotip() throws Exception;
 
 }

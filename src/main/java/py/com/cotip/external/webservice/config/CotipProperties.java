@@ -23,10 +23,10 @@ public class CotipProperties {
     @Value("${cotizacion.gnb.path}")
     private String gnbPath;
 
-    @Value("${cotizacion.basa.path}")
-    private String basaPath;
-
     @Value("${cotizacion.rio.path}")
     private String rioPath;
+
+    @Value("${cotizacion.solar.banco.path}")
+    private String solarBankPath;
 
 }
