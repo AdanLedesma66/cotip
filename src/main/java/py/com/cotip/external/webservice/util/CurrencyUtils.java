@@ -88,4 +88,31 @@ public class CurrencyUtils {
         return null;
     }
 
+    public static String getEnglishName(String spanishName) {
+        switch (spanishName) {
+            case "Dólar Americano":
+                return "US Dollar";
+            case "Dólar Cheque / Transferencia":
+                return "US Dollar Check/Transfer";
+            case "Peso Argentino":
+                return "Argentine Peso";
+            case "Real Brasileño":
+                return "Brazilian Real";
+            case "Euro Efectivo":
+                return "Euro Cash";
+            case "Euro Transferencia":
+                return "Euro Transfer";
+            case "Franco Suizo":
+                return "Swiss Franc";
+            case "Libra Esterlina":
+                return "British Pound";
+            case "Yen Japonés":
+                return "Japanese Yen";
+            default:
+                return "Unknown Currency";
+        }
+    }
+
+
+
 }
