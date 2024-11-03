@@ -3,7 +3,6 @@ package py.com.cotip.external.webservice;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
@@ -11,7 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import py.com.cotip.domain.port.out.CotipOutPort;
-import py.com.cotip.domain.port.out.response.CotipOutResponse;
+import py.com.cotip.domain.port.out.response.SolarBankResponse;
 import py.com.cotip.domain.port.out.response.FamiliarResponse;
 import py.com.cotip.external.webservice.config.CotipProperties;
 import py.com.cotip.external.webservice.model.*;
@@ -221,8 +220,8 @@ public class CotipOutPortImpl implements CotipOutPort {
     }
 
     @Override
-    public List<CotipOutResponse> findSolarBankCotip() throws Exception {
-        List<CotipOutResponse> cotizaciones = new ArrayList<>();
+    public List<SolarBankResponse> findSolarBankCotip() throws Exception {
+        List<SolarBankResponse> cotizaciones = new ArrayList<>();
 
         try {
             Document doc = Jsoup.connect(cotipProperties.getSolarBankPath()).get();
@@ -244,7 +243,7 @@ public class CotipOutPortImpl implements CotipOutPort {
                         String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(name);
                         String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(standardizedExchangeRate));
 
-                        CotipOutResponse cotizacion = CotipOutResponse.builder()
+                        SolarBankResponse cotizacion = SolarBankResponse.builder()
                                 .exchangeRate(standardizedExchangeRate)
                                 .currencyCode(standardizedCurrencyCode)
                                 .buyRate(buyRate)

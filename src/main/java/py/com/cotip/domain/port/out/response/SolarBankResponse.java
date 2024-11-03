@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class CotipOutResponse {
+public class SolarBankResponse {
 
     private String exchangeRate;
     private String currencyCode;
