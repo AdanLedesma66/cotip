@@ -51,7 +51,7 @@ public class CotipService implements CotipInPort {
 
         log.info("Obtenemos la ultima cotizacion guardada");
         return CotipDomainMapper.INSTANCE.toListCotipDto(
-                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_FAMILIAR.getDescription()));    }
+                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_CONTINENTAL.getDescription()));    }
 
     @Cacheable(value = "familiar", key = "'familiarResponse'")
     @Override
@@ -89,7 +89,7 @@ public class CotipService implements CotipInPort {
 
         log.info("Obtenemos la ultima cotizacion guardada");
         return CotipDomainMapper.INSTANCE.toListCotipDto(
-                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_FAMILIAR.getDescription()));
+                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_RIO.getDescription()));
     }
 
     @Cacheable(value = "solar", key = "'solarResponse'")
