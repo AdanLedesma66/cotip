@@ -48,7 +48,7 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
 
     @Override
     public List<CotipEntity> findAllByProviderOrderByUploadDate(ProviderType tipoProvedor) {
-        return cotipRepository.findAllByProviderOrderByUploadDate(tipoProvedor);
+        return cotipRepository.findLatestCotizacionesByProvider(tipoProvedor);
     }
 
     // ::: externals
