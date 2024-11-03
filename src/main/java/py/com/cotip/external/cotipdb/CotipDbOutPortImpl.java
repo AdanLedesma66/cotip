@@ -3,7 +3,7 @@ package py.com.cotip.external.cotipdb;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import py.com.cotip.domain.commons.RateChange;
-import py.com.cotip.domain.commons.TipoProveedor;
+import py.com.cotip.domain.commons.ProviderType;
 import py.com.cotip.domain.port.out.CotipDbOutPort;
 import py.com.cotip.external.cotipdb.model.CotipEntity;
 import py.com.cotip.external.cotipdb.repository.CotipRepository;
@@ -21,16 +21,16 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
     // ::: impls
 
     @Override
-    public List<CotipEntity> saveAllCotipEntity(List<CotipEntity> cotipEntities, TipoProveedor tipoProveedor) {
+    public List<CotipEntity> saveAllCotipEntity(List<CotipEntity> cotipEntities, ProviderType tipoProveedor) {
 
         cotipEntities.forEach(cotipEntity -> {
 
             Optional<CotipEntity> lastCotipEntity = cotipRepository.findTopByExchangeRateAndProviderOrderByUploadDateDesc(
-                    cotipEntity.getExchangeRate(), tipoProveedor.getDescription());
+                    cotipEntity.getExchangeRate(), tipoProveedor);
 
             cotipEntity.setId(UUID.randomUUID());
             cotipEntity.setEnabled(true);
-            cotipEntity.setProvider(tipoProveedor.getDescription());
+            cotipEntity.setProvider(tipoProveedor);
 
             if (lastCotipEntity.isPresent()) {
                 CotipEntity previousCotip = lastCotipEntity.get();
@@ -47,7 +47,7 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
     }
 
     @Override
-    public List<CotipEntity> findAllByProviderOrderByUploadDate(String tipoProvedor) {
+    public List<CotipEntity> findAllByProviderOrderByUploadDate(ProviderType tipoProvedor) {
         return cotipRepository.findAllByProviderOrderByUploadDate(tipoProvedor);
     }
 

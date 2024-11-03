@@ -10,8 +10,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import py.com.cotip.domain.port.out.CotipOutPort;
-import py.com.cotip.domain.port.out.response.SolarBankResponse;
-import py.com.cotip.domain.port.out.response.FamiliarResponse;
+import py.com.cotip.domain.port.out.response.*;
 import py.com.cotip.external.webservice.config.CotipProperties;
 import py.com.cotip.external.webservice.model.*;
 import py.com.cotip.external.webservice.util.CurrencyUtils;
@@ -37,7 +36,7 @@ public class CotipOutPortImpl implements CotipOutPort {
     // ::: externals
 
     @Override
-    public ContinentalBearerExternal findContinentalBearerToken() throws Exception {
+    public ContinentalBearerExternal getContinentalBearerToken() throws Exception {
         log.info("Obteniendo bearer token del banco continental");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -66,14 +65,16 @@ public class CotipOutPortImpl implements CotipOutPort {
     }
 
     @Override
-    public List<ContinentalExternal> findContinentalCotizacion() throws Exception {
+    public List<ContinentalBankResponse> fetchContinentalBankExchangeRates() throws Exception {
+        List<ContinentalBankResponse> cotizaciones = new ArrayList<>();
+
         log.info("Obteniendo cotizacion del banco continental");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(cotipProperties.getContinentalPath()))
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
-                .header("Authorization", "Bearer " + findContinentalBearerToken().getAccessToken())
+                .header("Authorization", "Bearer " + getContinentalBearerToken().getAccessToken())
                 .header("Subscription-Key", "3c35bb9e5fa948adb8d64c123d9d1a45")
                 .GET()
                 .build();
@@ -92,10 +93,20 @@ public class CotipOutPortImpl implements CotipOutPort {
 
                 cotizacion.setExchangeRate(standardizedExchangeRate);
                 cotizacion.setCurrencyCode(standardizedCurrencyCode);
+
+                ContinentalBankResponse bankResponse = ContinentalBankResponse.builder()
+                        .exchangeRate(cotizacion.getExchangeRate())
+                        .currencyCode(cotizacion.getCurrencyCode())
+                        .buyRate(cotizacion.getBuyRate().longValue())
+                        .sellRate(cotizacion.getSellRate().longValue())
+                        .build();
+
+                cotizaciones.add(bankResponse);
+
             });
 
             log.info("La llamada se ejecuto con exito");
-            return cotizacionExternal;
+            return cotizaciones;
         } catch (IOException | InterruptedException e) {
             log.error("Error al obtener las cotizaciones de Banco Continental", e);
             throw new Exception("Error al obtener las cotizaciones del Banco Continental");
@@ -104,9 +115,9 @@ public class CotipOutPortImpl implements CotipOutPort {
     }
 
     @Override
-    public List<FamiliarResponse> findFamiliarCotizacion() throws Exception {
+    public List<FamiliarBankResponse> fetchFamiliarBankExchangeRates() throws Exception {
         log.info("Obteniendo cotizacion del banco familiar");
-        List<FamiliarResponse> cotizaciones = new ArrayList<>();
+        List<FamiliarBankResponse> cotizaciones = new ArrayList<>();
 
         try {
             log.info("Se scrapean del html los datos de la cotizacion");
@@ -128,7 +139,7 @@ public class CotipOutPortImpl implements CotipOutPort {
                     String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
                     String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(standardizedExchangeRate));
 
-                    FamiliarResponse cotizacion = FamiliarResponse.builder()
+                    FamiliarBankResponse cotizacion = FamiliarBankResponse.builder()
                             .exchangeRate(standardizedExchangeRate)
                             .currencyCode(standardizedCurrencyCode)
                             .buyRate(buyRateLong)
@@ -147,7 +158,9 @@ public class CotipOutPortImpl implements CotipOutPort {
     }
 
     @Override
-    public List<GnbExternal> findGnbCotizacion() throws Exception {
+    public List<GnbBankResponse> fetchGnbBankExchangeRates() throws Exception {
+        List<GnbBankResponse> cotizaciones = new ArrayList<>();
+
         log.info("Obteniendo cotizacion del banco gnb");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -170,10 +183,18 @@ public class CotipOutPortImpl implements CotipOutPort {
                 cotizacion.setCurrencyDesc(standardizedExchangeRate);
                 cotizacion.setCurrencyCode(standardizedCurrencyCode);
 
+                GnbBankResponse bankResponse = GnbBankResponse.builder()
+                        .exchangeRate(cotizacion.getCurrencyDesc())
+                        .currencyCode(cotizacion.getCurrencyCode())
+                        .buyRate(stringToLong(cotizacion.getElectronicBuyPrice()))
+                        .sellRate(stringToLong(cotizacion.getElectronicSellPrice()))
+                        .build();
+
+                cotizaciones.add(bankResponse);
             });
 
             log.info("La llamada se ejecuto con exito");
-            return listadoGbnExternal.getExchangeRates();
+            return cotizaciones;
         } catch (IOException | InterruptedException e) {
             log.error("Error al obtener las cotizaciones de Banco Continental", e);
             throw new Exception("Error al obtener las cotizaciones del Banco Continental");
@@ -181,7 +202,9 @@ public class CotipOutPortImpl implements CotipOutPort {
     }
 
     @Override
-    public List<RioExternal> findRioCotizacion() throws Exception {
+    public List<RioBankResponse> fetchRioBankExchangeRates() throws Exception {
+        List<RioBankResponse> cotizaciones = new ArrayList<>();
+
         log.info("Obteniendo cotizacion del banco continental");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -209,10 +232,19 @@ public class CotipOutPortImpl implements CotipOutPort {
                 cotizacion.setExchangeRate(standardizedExchangeRate);
                 cotizacion.setCurrencyCode(standardizedCurrencyCode);
 
+                RioBankResponse bankResponse = RioBankResponse.builder()
+                        .exchangeRate(cotizacion.getExchangeRate())
+                        .currencyCode(cotizacion.getCurrencyCode())
+                        .buyRate(stringToLong(cotizacion.getBuyRate()))
+                        .sellRate(stringToLong(cotizacion.getSellRate()))
+                        .build();
+
+                cotizaciones.add(bankResponse);
+
             });
 
             log.info("La llamada se ejecuto con exito");
-            return rioExternalList;
+            return cotizaciones;
         } catch (IOException | InterruptedException e) {
             log.error("Error al obtener las cotizaciones de Banco Rio", e);
             throw new Exception("Error al obtener las cotizaciones del Banco Rio");
@@ -220,7 +252,7 @@ public class CotipOutPortImpl implements CotipOutPort {
     }
 
     @Override
-    public List<SolarBankResponse> findSolarBankCotip() throws Exception {
+    public List<SolarBankResponse> fetchSolarBankExchangeRates() throws Exception {
         List<SolarBankResponse> cotizaciones = new ArrayList<>();
 
         try {
@@ -261,6 +293,14 @@ public class CotipOutPortImpl implements CotipOutPort {
         }
 
         return cotizaciones;
+    }
+
+    static Long stringToLong(String value) {
+        if (value == null || value.isEmpty()) {
+            return null;
+        }
+        BigDecimal decimalValue = new BigDecimal(value.replace(",", "").trim());
+        return decimalValue.longValue();
     }
 
 

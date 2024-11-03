@@ -1,18 +1,13 @@
-package py.com.cotip.application.rest.model;
+package py.com.cotip.domain.port.out.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import py.com.cotip.domain.commons.RateChange;
-
-import java.time.OffsetDateTime;
 
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class FamiliarDto {
+public class GnbBankResponse {
 
     // ::: vars
 
@@ -20,5 +15,4 @@ public class FamiliarDto {
     private String currencyCode;
     private Long buyRate;
     private Long sellRate;
-
 }

@@ -1,12 +1,10 @@
 package py.com.cotip.external.cotipdb.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 import py.com.cotip.domain.commons.RateChange;
 import py.com.cotip.external.cotipdb.config.CotipBaseEntity;
+import py.com.cotip.external.cotipdb.util.RateChangeConverter;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -18,18 +16,24 @@ public class CotipEntity extends CotipBaseEntity {
 
     // ::: vars
 
+    @Column(name = "tipo_cambio")
     private String exchangeRate;
 
+    @Column(name = "codigo_moneda")
     private String currencyCode;
 
+    @Column(name = "tasa_compra")
     private Long buyRate;
 
+    @Column(name = "tasa_venta")
     private Long sellRate;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = RateChangeConverter.class)
+    @Column(name = "estado_compra")
     private RateChange buyRateStatus;
 
-    @Enumerated(EnumType.STRING)
+    @Convert(converter = RateChangeConverter.class)
+    @Column(name = "estado_venta")
     private RateChange sellRateStatus;
 
 

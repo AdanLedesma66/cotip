@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import py.com.cotip.domain.commons.ProviderType;
 import py.com.cotip.domain.commons.RateChange;
 
 import java.time.OffsetDateTime;
@@ -23,8 +24,9 @@ public class CotipDto {
     private RateChange buyRateStatus;
     private RateChange sellRateStatus;
     private boolean enabled;
-    private String provider;
+    private ProviderType provider;
     private String location;
     private String city;
     private OffsetDateTime lastUpdated;
+
 }

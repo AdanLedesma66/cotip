@@ -18,27 +18,27 @@ public class CotipApi {
 
     // ::: requests
 
-    @GetMapping("/continental")
+    @GetMapping("/continental-bank")
     public ResponseEntity continental() throws Exception{
-        return ResponseEntity.ok(action.findCotizacionContinentalResponse());
+        return ResponseEntity.ok(action.findLatestContinentalBankExchangeRates());
     }
 
-    @GetMapping("/familiar")
-    public ResponseEntity familiar() throws Exception { return ResponseEntity.ok(action.findFamiliarCotizacionResponse());}
+    @GetMapping("/familiar-bank")
+    public ResponseEntity familiar() throws Exception { return ResponseEntity.ok(action.findLatestFamiliarBankExchangeRates());}
 
-    @GetMapping("/gnb")
+    @GetMapping("/gnb-bank")
     public ResponseEntity gnb() throws Exception {
-        return ResponseEntity.ok(action.findGnbCotizacionResponse());
+        return ResponseEntity.ok(action.findLatestGnbBankExchangeRates());
     }
 
-    @GetMapping("/banco-rio")
+    @GetMapping("/rio-bank")
     public ResponseEntity bancoRio() throws Exception{
-        return ResponseEntity.ok(action.findRioCotizacionResponse());
+        return ResponseEntity.ok(action.findLatestRioBankExchangeRates());
     }
 
-    @GetMapping("/banco-solar")
+    @GetMapping("/solar-bank")
     public ResponseEntity bancoSolar() throws Exception{
-        return ResponseEntity.ok(action.findSolarBankCotip());
+        return ResponseEntity.ok(action.findLatestSolarBankExchangeRates());
     }
 
 
