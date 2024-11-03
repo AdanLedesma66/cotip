@@ -51,7 +51,8 @@ public class CotipService implements CotipInPort {
 
         log.info("Obtenemos la ultima cotizacion guardada");
         return CotipDomainMapper.INSTANCE.toListCotipDto(
-                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_CONTINENTAL.getDescription()));    }
+                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_CONTINENTAL.getDescription()));
+    }
 
     @Cacheable(value = "familiar", key = "'familiarResponse'")
     @Override
@@ -107,18 +108,20 @@ public class CotipService implements CotipInPort {
 
     // ::: externals
 
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "0 0 */6 * * *")
     public void cacheCotizacionesDiarias() {
         try {
-            log.info("Ejecutando carga diaria de cotizaciones");
+            log.info("Ejecutando carga de cotizaciones cada 6 horas");
             getSelf().findCotizacionContinentalResponse();
             getSelf().findFamiliarCotizacionResponse();
             getSelf().findGnbCotizacionResponse();
             getSelf().findRioCotizacionResponse();
+            getSelf().findSolarBankCotip();
         } catch (Exception e) {
-            log.error("Error al cargar las cotizaciones diarias: ", e);
+            log.error("Error al cargar las cotizaciones: ", e);
         }
     }
+
 
     private void saveAllCotipEntities(List<CotipEntity> cotipEntities, TipoProveedor tipoProveedor) {
         cotipDbOutPort.saveAllCotipEntity(cotipEntities, tipoProveedor);
