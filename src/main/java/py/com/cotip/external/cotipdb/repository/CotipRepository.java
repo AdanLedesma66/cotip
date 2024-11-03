@@ -11,7 +11,7 @@ import java.util.UUID;
 @Repository
 public interface CotipRepository extends JpaRepository<CotipEntity, UUID> {
 
-    Optional<CotipEntity> findTopByCurrencyCodeAndProviderOrderByUploadDateDesc(String currencyCode, String tipoProveedor);
+    Optional<CotipEntity> findTopByExchangeRateAndProviderOrderByUploadDateDesc(String currencyCode, String tipoProveedor);
     List<CotipEntity> findAllByProviderOrderByUploadDate(String tipoProveedor);
 
 }
