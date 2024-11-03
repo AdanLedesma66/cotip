@@ -3,7 +3,7 @@ package py.com.cotip.domain.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import py.com.cotip.application.rest.model.CotipDto;
-import py.com.cotip.domain.port.out.response.CotipOutResponse;
+import py.com.cotip.domain.port.out.response.SolarBankResponse;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface SolarBankDomainMapper {
 
     // ::: mappers
 
-    CotipDto toDto(CotipOutResponse solarBankExternal);
-    List<CotipDto> toListDto(List<CotipOutResponse> solarBankExternal);
+    CotipDto toDto(SolarBankResponse solarBankExternal);
+    List<CotipDto> toListDto(List<SolarBankResponse> solarBankExternal);
 
 }
