@@ -25,8 +25,8 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
 
         cotipEntities.forEach(cotipEntity -> {
 
-            Optional<CotipEntity> lastCotipEntity = cotipRepository.findTopByCurrencyCodeAndProviderOrderByUploadDateDesc(
-                    cotipEntity.getCurrencyCode(), tipoProveedor.getDescription());
+            Optional<CotipEntity> lastCotipEntity = cotipRepository.findTopByExchangeRateAndProviderOrderByUploadDateDesc(
+                    cotipEntity.getExchangeRate(), tipoProveedor.getDescription());
 
             cotipEntity.setId(UUID.randomUUID());
             cotipEntity.setEnabled(true);
