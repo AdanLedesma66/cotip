@@ -6,8 +6,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Scheduled;
 import py.com.cotip.application.rest.model.CotipDto;
-import py.com.cotip.domain.commons.TipoProveedor;
-import py.com.cotip.domain.mapper.*;
+import py.com.cotip.domain.commons.ProviderType;
+import py.com.cotip.domain.mapper.CotipDomainMapper;
 import py.com.cotip.domain.port.in.CotipInPort;
 import py.com.cotip.domain.port.out.CotipDbOutPort;
 import py.com.cotip.domain.port.out.CotipOutPort;
@@ -41,69 +41,64 @@ public class CotipService implements CotipInPort {
 
     // ::: impl
 
-    @Cacheable(value = "continental", key = "'continentalResponse'")
+    @Cacheable(value = "continental-bank", key = "'continentalResponse'")
     @Override
-    public List<CotipDto> findCotizacionContinentalResponse() throws Exception {
-        var continentalResponseList = ContinentalDomainMapper.INSTANCE.externalToListResponse(cotipOutPort.findContinentalCotizacion());
-
+    public List<CotipDto> findLatestContinentalBankExchangeRates() throws Exception {
         log.info("Guardamos las cotizaciones");
-        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListContinentalResponse(continentalResponseList), TipoProveedor.BANCO_CONTINENTAL);
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListContinentalBankResponse(cotipOutPort.fetchContinentalBankExchangeRates()),
+                ProviderType.CONTINENTAL_BANK);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        return CotipDomainMapper.INSTANCE.toListCotipDto(
-                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_CONTINENTAL.getDescription()));
+        return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
+                (ProviderType.CONTINENTAL_BANK));
     }
 
-    @Cacheable(value = "familiar", key = "'familiarResponse'")
+    @Cacheable(value = "familiar-bank", key = "'familiarResponse'")
     @Override
-    public List<CotipDto> findFamiliarCotizacionResponse() throws Exception {
-        var familiarDtoList = FamiliarDomainMapper.INSTANCE.toListFamiliarDto(cotipOutPort.findFamiliarCotizacion());
-
+    public List<CotipDto> findLatestFamiliarBankExchangeRates() throws Exception {
         log.info("Guardamos las cotizaciones");
-        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListFamiliarDto(familiarDtoList), TipoProveedor.BANCO_FAMILIAR);
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListFamiliarBankResponse(cotipOutPort.fetchFamiliarBankExchangeRates()),
+                ProviderType.FAMILIAR_BANK);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        return CotipDomainMapper.INSTANCE.toListCotipDto(
-                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_FAMILIAR.getDescription()));
+        return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
+                (ProviderType.FAMILIAR_BANK));
     }
 
-    @Cacheable(value = "gnb", key = "'gnbResponse'")
+    @Cacheable(value = "gnb-bank", key = "'gnbResponse'")
     @Override
-    public List<CotipDto> findGnbCotizacionResponse() throws Exception {
-        var listGnbDto = GnbDomainMapper.INSTANCE.toListGnbDto(cotipOutPort.findGnbCotizacion());
-
+    public List<CotipDto> findLatestGnbBankExchangeRates() throws Exception {
         log.info("Guardamos las cotizaciones");
-        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListGnbDto(listGnbDto), TipoProveedor.BANCO_GNB);
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListGnbBankResponse(cotipOutPort.fetchGnbBankExchangeRates()),
+                ProviderType.GNB_BANK);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        return CotipDomainMapper.INSTANCE.toListCotipDto(
-                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_GNB.getDescription()));
+        return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
+                (ProviderType.GNB_BANK));
     }
 
-    @Cacheable(value = "rio", key = "'rioResponse'")
+    @Cacheable(value = "rio-bank", key = "'rioResponse'")
     @Override
-    public List<CotipDto> findRioCotizacionResponse() throws Exception {
-        var rioDtoList = RioDomainMapper.INSTANCE.toListRioDto(cotipOutPort.findRioCotizacion());
-
+    public List<CotipDto> findLatestRioBankExchangeRates() throws Exception {
         log.info("Guardamos las cotizaciones");
-        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListRioDto(rioDtoList), TipoProveedor.BANCO_RIO);
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListRioBankResponse(cotipOutPort.fetchRioBankExchangeRates()),
+                ProviderType.RIO_BANK);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        return CotipDomainMapper.INSTANCE.toListCotipDto(
-                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_RIO.getDescription()));
+        return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
+                (ProviderType.RIO_BANK));
     }
 
-    @Cacheable(value = "solar", key = "'solarResponse'")
+    @Cacheable(value = "solar-bank", key = "'solarResponse'")
     @Override
-    public List<CotipDto> findSolarBankCotip() throws Exception {
-        var cotipDtos = SolarBankDomainMapper.INSTANCE.toListDto(cotipOutPort.findSolarBankCotip());
-
+    public List<CotipDto> findLatestSolarBankExchangeRates() throws Exception {
         log.info("Guardamos las cotizaciones");
-        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListCotipDto(cotipDtos), TipoProveedor.BANCO_SOLAR);
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListSolarBankResponse(cotipOutPort.fetchSolarBankExchangeRates()),
+                ProviderType.SOLAR_BANK);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        return CotipDomainMapper.INSTANCE.toListCotipDto(
-                cotipDbOutPort.findAllByProviderOrderByUploadDate(TipoProveedor.BANCO_SOLAR.getDescription()));
+        return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
+                (ProviderType.SOLAR_BANK));
     }
 
     // ::: externals
@@ -112,18 +107,18 @@ public class CotipService implements CotipInPort {
     public void cacheCotizacionesDiarias() {
         try {
             log.info("Ejecutando carga de cotizaciones cada 6 horas");
-            getSelf().findCotizacionContinentalResponse();
-            getSelf().findFamiliarCotizacionResponse();
-            getSelf().findGnbCotizacionResponse();
-            getSelf().findRioCotizacionResponse();
-            getSelf().findSolarBankCotip();
+            getSelf().findLatestContinentalBankExchangeRates();
+            getSelf().findLatestFamiliarBankExchangeRates();
+            getSelf().findLatestGnbBankExchangeRates();
+            getSelf().findLatestRioBankExchangeRates();
+            getSelf().findLatestSolarBankExchangeRates();
         } catch (Exception e) {
             log.error("Error al cargar las cotizaciones: ", e);
         }
     }
 
 
-    private void saveAllCotipEntities(List<CotipEntity> cotipEntities, TipoProveedor tipoProveedor) {
+    private void saveAllCotipEntities(List<CotipEntity> cotipEntities, ProviderType tipoProveedor) {
         cotipDbOutPort.saveAllCotipEntity(cotipEntities, tipoProveedor);
     }
 }

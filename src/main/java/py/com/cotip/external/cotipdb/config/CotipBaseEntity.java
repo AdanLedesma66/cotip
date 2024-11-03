@@ -1,12 +1,11 @@
 package py.com.cotip.external.cotipdb.config;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import py.com.cotip.domain.commons.ProviderType;
+import py.com.cotip.external.cotipdb.util.ProviderTypeConverter;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -23,14 +22,20 @@ public class CotipBaseEntity implements Serializable {
     @Id
     private UUID id;
 
+    @Column(name = "habilitado")
     private boolean enabled;
 
-    private String provider;
+    @Convert(converter = ProviderTypeConverter.class)
+    @Column(name = "proveedor")
+    private ProviderType provider;
 
+    @Column(name = "sucursal")
     private String location;
 
+    @Column(name = "ciudad")
     private String city;
 
+    @Column(name = "fecha_carga")
     private OffsetDateTime uploadDate;
 
     @PrePersist

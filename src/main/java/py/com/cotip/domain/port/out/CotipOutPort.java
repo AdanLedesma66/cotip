@@ -1,23 +1,22 @@
 package py.com.cotip.domain.port.out;
 
-import py.com.cotip.domain.port.out.response.SolarBankResponse;
-import py.com.cotip.domain.port.out.response.FamiliarResponse;
+import py.com.cotip.domain.port.out.response.*;
 import py.com.cotip.external.webservice.model.*;
 
 import java.util.List;
 
 public interface CotipOutPort {
 
-    ContinentalBearerExternal findContinentalBearerToken() throws Exception;
+    ContinentalBearerExternal getContinentalBearerToken() throws Exception;
 
-    List<ContinentalExternal> findContinentalCotizacion() throws Exception;
+    List<ContinentalBankResponse> fetchContinentalBankExchangeRates() throws Exception;
 
-    List<FamiliarResponse> findFamiliarCotizacion() throws Exception;
+    List<FamiliarBankResponse> fetchFamiliarBankExchangeRates() throws Exception;
 
-    List<GnbExternal> findGnbCotizacion() throws Exception;
+    List<GnbBankResponse> fetchGnbBankExchangeRates() throws Exception;
 
-    List<RioExternal> findRioCotizacion() throws Exception;
+    List<RioBankResponse> fetchRioBankExchangeRates() throws Exception;
 
-    List<SolarBankResponse> findSolarBankCotip() throws Exception;
+    List<SolarBankResponse> fetchSolarBankExchangeRates() throws Exception;
 
 }

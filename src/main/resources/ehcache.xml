@@ -3,35 +3,35 @@
         xmlns='http://www.ehcache.org/v3'
         xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core.xsd">
 
-    <cache alias="continental">
+    <cache alias="continental-bank">
         <expiry>
             <ttl unit="hours">6</ttl>
         </expiry>
         <heap unit="entries">1000</heap>
     </cache>
 
-    <cache alias="familiar">
+    <cache alias="familiar-bank">
         <expiry>
             <ttl unit="hours">6</ttl>
         </expiry>
         <heap unit="entries">1000</heap>
     </cache>
 
-    <cache alias="rio">
+    <cache alias="rio-bank">
         <expiry>
             <ttl unit="hours">6</ttl>
         </expiry>
         <heap unit="entries">1000</heap>
     </cache>
 
-    <cache alias="gnb">
+    <cache alias="gnb-bank">
         <expiry>
             <ttl unit="hours">6</ttl>
         </expiry>
         <heap unit="entries">1000</heap>
     </cache>
 
-    <cache alias="solar">
+    <cache alias="solar-bank">
         <expiry>
             <ttl unit="hours">6</ttl>
         </expiry>

@@ -2,11 +2,7 @@ package py.com.cotip.external.cotipdb.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import py.com.cotip.application.rest.model.CotipDto;
-import py.com.cotip.application.rest.model.FamiliarDto;
-import py.com.cotip.application.rest.model.GnbDto;
-import py.com.cotip.application.rest.model.RioDto;
-import py.com.cotip.domain.port.out.response.ContinentalResponse;
+import py.com.cotip.domain.port.out.response.*;
 import py.com.cotip.external.cotipdb.model.CotipEntity;
 
 import java.util.List;
@@ -16,25 +12,25 @@ public interface CotipDbMapper {
 
     CotipDbMapper INSTANCE = Mappers.getMapper(CotipDbMapper.class);
     
-    CotipEntity toFamiliarDto(FamiliarDto familiarDto);
+    CotipEntity toFamiliarBankResponse(FamiliarBankResponse familiarBankResponse);
 
-    List<CotipEntity> toListFamiliarDto(List<FamiliarDto> familiarDtoList);
+    List<CotipEntity> toListFamiliarBankResponse(List<FamiliarBankResponse> familiarBankResponseList);
 
-    CotipEntity toContinentalResponse(ContinentalResponse continentalResponse);
+    CotipEntity toContinentalBankResponse(ContinentalBankResponse continentalResponse);
 
-    List<CotipEntity> toListContinentalResponse(List<ContinentalResponse> continentalResponse);
+    List<CotipEntity> toListContinentalBankResponse(List<ContinentalBankResponse> continentalResponse);
 
-    CotipEntity toRioDto(RioDto rioDto);
+    CotipEntity toRioBankResponse(RioBankResponse rioBankResponse);
 
-    List<CotipEntity> toListRioDto(List<RioDto> rioDto);
+    List<CotipEntity> toListRioBankResponse(List<RioBankResponse> rioBankResponseList);
 
-    CotipEntity toGnbDto(GnbDto gnbDtos);
+    CotipEntity toGnbBankResponse(GnbBankResponse gnbBankResponse);
 
-    List<CotipEntity> toListGnbDto(List<GnbDto> gnbDtos);
+    List<CotipEntity> toListGnbBankResponse(List<GnbBankResponse> gnbBankResponseList);
 
-    CotipEntity toCotipDto(CotipDto cotipDto);
+    CotipEntity toSolarBankResponse(SolarBankResponse solarBankResponse);
 
-    List<CotipEntity> toListCotipDto(List<CotipDto> cotipDto);
+    List<CotipEntity> toListSolarBankResponse(List<SolarBankResponse> solarBankResponseList);
 
 
 }

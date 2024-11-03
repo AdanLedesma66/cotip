@@ -1,20 +1,18 @@
-package py.com.cotip.application.rest.model;
+package py.com.cotip.domain.port.out.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
-public class GnbDto {
+public class RioBankResponse {
+
+    // ::: vars
 
     private String exchangeRate;
     private String currencyCode;
     private Long buyRate;
     private Long sellRate;
-
-
 }

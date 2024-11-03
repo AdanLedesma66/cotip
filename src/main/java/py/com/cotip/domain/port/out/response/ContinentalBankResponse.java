@@ -1,13 +1,11 @@
 package py.com.cotip.domain.port.out.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class GnbResponse {
+public class ContinentalBankResponse {
 
     // ::: vars
 
@@ -15,4 +13,5 @@ public class GnbResponse {
     private String currencyCode;
     private Long buyRate;
     private Long sellRate;
+
 }
