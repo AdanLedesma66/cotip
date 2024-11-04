@@ -101,6 +101,18 @@ public class CotipService implements CotipInPort {
                 (ProviderType.SOLAR_BANK));
     }
 
+    @Cacheable(value = "bnf-bank", key = "'solarResponse'")
+    @Override
+    public List<CotipDto> findLatestBnfBankExchangeRates() throws Exception {
+        log.info("Guardamos las cotizaciones");
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListBnfBankResponse(cotipOutPort.fetchBnfBankExchangeRates()),
+                ProviderType.BNF_BANK);
+
+        log.info("Obtenemos la ultima cotizacion guardada");
+        return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
+                (ProviderType.BNF_BANK));
+    }
+
     // ::: externals
 
     @Scheduled(cron = "0 0 */6 * * *")

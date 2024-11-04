@@ -19,4 +19,6 @@ public interface CotipOutPort {
 
     List<SolarBankResponse> fetchSolarBankExchangeRates() throws Exception;
 
+    List<BnfBankResponse> fetchBnfBankExchangeRates() throws Exception;
+
 }
