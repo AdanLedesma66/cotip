@@ -46,6 +46,11 @@ public class CotipApi {
         return ResponseEntity.ok(action.findLatestBnfBankExchangeRates());
     }
 
+    @GetMapping("/atlas-bank")
+    public ResponseEntity atlasBank() throws Exception{
+        return ResponseEntity.ok(action.findLatestAtlasBankExchangeRates());
+    }
+
 
 
 }

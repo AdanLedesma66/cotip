@@ -101,7 +101,7 @@ public class CotipService implements CotipInPort {
                 (ProviderType.SOLAR_BANK));
     }
 
-    @Cacheable(value = "bnf-bank", key = "'solarResponse'")
+    @Cacheable(value = "bnf-bank", key = "'bnfResponse'")
     @Override
     public List<CotipDto> findLatestBnfBankExchangeRates() throws Exception {
         log.info("Guardamos las cotizaciones");
@@ -111,6 +111,18 @@ public class CotipService implements CotipInPort {
         log.info("Obtenemos la ultima cotizacion guardada");
         return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
                 (ProviderType.BNF_BANK));
+    }
+
+    @Cacheable(value = "atlas-bank", key = "'atlasResponse'")
+    @Override
+    public List<CotipDto> findLatestAtlasBankExchangeRates() throws Exception {
+        log.info("Guardamos las cotizaciones");
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListAtlasBankResponse(cotipOutPort.fetchAtlasBankExchangeRates()),
+                ProviderType.ATLAS_BANK);
+
+        log.info("Obtenemos la ultima cotizacion guardada");
+        return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
+                (ProviderType.ATLAS_BANK));
     }
 
     // ::: externals

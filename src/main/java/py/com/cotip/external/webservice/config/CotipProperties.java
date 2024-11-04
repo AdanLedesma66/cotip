@@ -32,4 +32,7 @@ public class CotipProperties {
     @Value("${cotip.bnf.bank.path}")
     private String bnfBankPath;
 
+    @Value("${cotip.atlas.bank.path}")
+    private String atlasBankPath;
+
 }
