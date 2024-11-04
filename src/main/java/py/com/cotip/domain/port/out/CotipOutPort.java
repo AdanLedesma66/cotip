@@ -23,4 +23,6 @@ public interface CotipOutPort {
 
     List<AtlasBankResponse> fetchAtlasBankExchangeRates() throws Exception;
 
+    List<FicFinancialResponse> fetchFicFinancialExchangeRates() throws Exception;
+
 }

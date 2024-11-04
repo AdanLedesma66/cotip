@@ -40,5 +40,9 @@ public interface CotipDbMapper {
 
     List<CotipEntity> toListAtlasBankResponse(List<AtlasBankResponse> atlasBankResponseList);
 
+    CotipEntity toFicFinancialResponse(FicFinancialResponse ficFinancialResponse);
+
+    List<CotipEntity> toListFicFinancialResponse(List<FicFinancialResponse> ficFinancialResponseList);
+
 
 }

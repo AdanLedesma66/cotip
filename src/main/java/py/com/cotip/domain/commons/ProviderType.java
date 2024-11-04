@@ -14,7 +14,8 @@ public enum ProviderType {
     GNB_BANK("Gnb Bank", "Banco Gnb"),
     SOLAR_BANK("Solar Bank", "Banco Solar"),
     BNF_BANK("National Development Bank", "Banco Nacional de Fomento"),
-    ATLAS_BANK("Atlas Bank", "Banco Atlas");
+    ATLAS_BANK("Atlas Bank", "Banco Atlas"),
+    FIC_FINANCIAL("Fic Financial", "Financiera Fic");
 
     private final String codeEn;
     private final String description;
