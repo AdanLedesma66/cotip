@@ -51,6 +51,11 @@ public class CotipApi {
         return ResponseEntity.ok(action.findLatestAtlasBankExchangeRates());
     }
 
+    @GetMapping("/fic-financial")
+    public ResponseEntity ficFinancial() throws Exception{
+        return ResponseEntity.ok(action.findLatestFicFinancialExchangeRates());
+    }
+
 
 
 }

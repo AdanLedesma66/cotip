@@ -125,6 +125,18 @@ public class CotipService implements CotipInPort {
                 (ProviderType.ATLAS_BANK));
     }
 
+    @Cacheable(value = "fic-financial", key = "'atlasResponse'")
+    @Override
+    public List<CotipDto> findLatestFicFinancialExchangeRates() throws Exception {
+        log.info("Guardamos las cotizaciones");
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListFicFinancialResponse(cotipOutPort.fetchFicFinancialExchangeRates()),
+                ProviderType.FIC_FINANCIAL);
+
+        log.info("Obtenemos la ultima cotizacion guardada");
+        return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
+                (ProviderType.FIC_FINANCIAL));
+    }
+
     // ::: externals
 
     @Scheduled(cron = "0 0 */6 * * *")

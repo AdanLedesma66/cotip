@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class FamiliarBankResponse {
+public class FicFinancialResponse {
 
     // ::: vars
 
@@ -15,5 +15,6 @@ public class FamiliarBankResponse {
     private String currencyCode;
     private Long buyRate;
     private Long sellRate;
+
 
 }

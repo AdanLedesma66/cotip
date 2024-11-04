@@ -18,12 +18,18 @@ import py.com.cotip.external.webservice.model.ListadoGbnExternal;
 import py.com.cotip.external.webservice.model.RioExternal;
 import py.com.cotip.external.webservice.util.CurrencyUtils;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -336,7 +342,7 @@ public class CotipOutPortImpl implements CotipOutPort {
                 log.info("La llamada se ejecutó con éxito");
             }
         } catch (IOException e) {
-            log.info("Error al obtener las cotizaciones de Banco Nacional de Fomento");
+            log.error("Error al obtener las cotizaciones de Banco Nacional de Fomento");
             throw new Exception("Error al obtener las cotizaciones de Banco Nacional de Fomento", e);
         }
 
@@ -373,10 +379,71 @@ public class CotipOutPortImpl implements CotipOutPort {
                     }
                 }
             }
-            System.out.println("La llamada se ejecutó con éxito");
+            log.info("La llamada se ejecutó con éxito");
         } catch (IOException e) {
-            System.err.println("Error al obtener las cotizaciones de Banco Atlas");
+            log.error("Error al obtener las cotizaciones de Banco Atlas");
             throw new Exception("Error al obtener las cotizaciones de Banco Atlas", e);
+        }
+
+        return exchangeRates;
+    }
+
+    @Override
+    public List<FicFinancialResponse> fetchFicFinancialExchangeRates() throws Exception {
+        List<FicFinancialResponse> exchangeRates = new ArrayList<>();
+
+        try {
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, new TrustManager[]{new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                    return new X509Certificate[0];
+                }
+            }}, new java.security.SecureRandom());
+
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+
+            Document doc = Jsoup.connect(cotipProperties.getFicFinancialPath())
+                    .sslSocketFactory(sslContext.getSocketFactory())
+                    .get();
+
+            Elements rows = doc.select("div.cotz_fila");
+
+            for (Element row : rows) {
+                String exchangeRate = row.select("div.cotz_moneda").text().trim();
+
+                String buyRateText = row.select("div.cotz_item").get(1).text().trim().replace(",", ".");
+                String sellRateText = row.select("div.cotz_item").get(2).text().trim().replace(",", ".");
+
+                BigDecimal buyRate = new BigDecimal(buyRateText).setScale(0, RoundingMode.DOWN);
+                BigDecimal sellRate = new BigDecimal(sellRateText).setScale(0, RoundingMode.DOWN);
+
+                String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
+                String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(standardizedExchangeRate);
+
+                FicFinancialResponse response = FicFinancialResponse.builder()
+                        .exchangeRate(standardizedExchangeRate)
+                        .currencyCode(standardizedCurrencyCode)
+                        .buyRate(buyRate.longValue())
+                        .sellRate(sellRate.longValue())
+                        .build();
+
+                exchangeRates.add(response);
+            }
+
+            log.info("La llamada se ejecutó con éxito");
+        } catch (IOException e) {
+            log.error("Error al obtener las cotizaciones de Financiera Fic", e);
+            throw new Exception("Error al obtener las cotizaciones de Financiera Fic", e);
         }
 
         return exchangeRates;

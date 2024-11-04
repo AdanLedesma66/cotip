@@ -35,4 +35,6 @@ public class CotipProperties {
     @Value("${cotip.atlas.bank.path}")
     private String atlasBankPath;
 
+    @Value("${cotip.fic.financial.path}")
+    private String ficFinancialPath;
 }
