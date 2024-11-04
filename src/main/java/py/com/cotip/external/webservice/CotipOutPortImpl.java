@@ -303,10 +303,8 @@ public class CotipOutPortImpl implements CotipOutPort {
         List<BnfBankResponse> exchangeRates = new ArrayList<>();
 
         try {
-            // Carga el documento desde la URL proporcionada
             Document doc = Jsoup.connect(cotipProperties.getBnfBankPath()).get();
 
-            // Selecciona solo la tabla que tiene la clase 'table table-condensed cotiz-tabla'
             Element cotizacionesTable = doc.selectFirst("table.table-condensed.cotiz-tabla tbody");
 
             if (cotizacionesTable != null) {
@@ -335,15 +333,55 @@ public class CotipOutPortImpl implements CotipOutPort {
                         }
                     }
                 }
-                System.out.println("La llamada se ejecutó con éxito");
+                log.info("La llamada se ejecutó con éxito");
             }
         } catch (IOException e) {
-            System.err.println("Error al obtener las cotizaciones de Banco Nacional de Fomento");
+            log.info("Error al obtener las cotizaciones de Banco Nacional de Fomento");
             throw new Exception("Error al obtener las cotizaciones de Banco Nacional de Fomento", e);
         }
 
         return exchangeRates;
     }
+
+    @Override
+    public List<AtlasBankResponse> fetchAtlasBankExchangeRates() throws Exception {
+        List<AtlasBankResponse> exchangeRates = new ArrayList<>();
+
+        try {
+            Document doc = Jsoup.connect(cotipProperties.getAtlasBankPath()).get();
+            Element carousel = doc.selectFirst("#desktop-currency-carousel .carousel-inner");
+
+            if (carousel != null) {
+                Elements items = carousel.select(".carousel-item");
+
+                for (Element item : items) {
+                    String exchangeRate = item.select(".currency-nombre").text().trim();
+                    BigDecimal buyRate = new BigDecimal(item.select(".currency-compra").text().trim());
+                    BigDecimal sellRate = new BigDecimal(item.select(".currency-venta").text().trim());
+
+                    String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
+                    String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(standardizedExchangeRate);
+
+                    if (standardizedExchangeRate != null && standardizedCurrencyCode != null) {
+                        AtlasBankResponse bankResponse = AtlasBankResponse.builder()
+                                .exchangeRate(standardizedExchangeRate)
+                                .currencyCode(standardizedCurrencyCode)
+                                .buyRate(buyRate.longValue())
+                                .sellRate(sellRate.longValue())
+                                .build();
+                        exchangeRates.add(bankResponse);
+                    }
+                }
+            }
+            System.out.println("La llamada se ejecutó con éxito");
+        } catch (IOException e) {
+            System.err.println("Error al obtener las cotizaciones de Banco Atlas");
+            throw new Exception("Error al obtener las cotizaciones de Banco Atlas", e);
+        }
+
+        return exchangeRates;
+    }
+
 
     // ::: externals
 

@@ -1,11 +1,13 @@
-package py.com.cotip.external.webservice.model;
+package py.com.cotip.domain.port.out.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
 @Data
 @Builder
-public class BasaExternal {
+@AllArgsConstructor
+public class AtlasBankResponse {
 
     // ::: vars
 
@@ -13,5 +15,4 @@ public class BasaExternal {
     private String currencyCode;
     private Long buyRate;
     private Long sellRate;
-
 }

@@ -19,4 +19,6 @@ public interface CotipInPort {
 
     List<CotipDto> findLatestBnfBankExchangeRates() throws Exception;
 
+    List<CotipDto> findLatestAtlasBankExchangeRates() throws Exception;
+
 }
