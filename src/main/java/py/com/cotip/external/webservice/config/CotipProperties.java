@@ -11,22 +11,25 @@ public class CotipProperties {
 
     // ::: vars
 
-    @Value("${cotizacion.continental.bearer.path}")
+    @Value("${cotip.continental.bank.bearer.path}")
     private String continentalBearerTokenPath;
 
-    @Value("${contizacion.continental.path}")
+    @Value("${cotip.continental.bank.path}")
     private String continentalPath;
 
-    @Value("${cotizacion.familiar.path}")
+    @Value("${cotip.familiar.bank.path}")
     private String familiarPath;
 
-    @Value("${cotizacion.gnb.path}")
+    @Value("${cotip.gnb.bank.path}")
     private String gnbPath;
 
-    @Value("${cotizacion.rio.path}")
+    @Value("${cotip.rio.bank.path}")
     private String rioPath;
 
-    @Value("${cotizacion.solar.banco.path}")
+    @Value("${cotip.solar.bank.path}")
     private String solarBankPath;
+
+    @Value("${cotip.bnf.bank.path}")
+    private String bnfBankPath;
 
 }

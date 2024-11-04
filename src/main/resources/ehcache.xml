@@ -37,4 +37,11 @@
         </expiry>
         <heap unit="entries">1000</heap>
     </cache>
+
+    <cache alias="bnf-bank">
+        <expiry>
+            <ttl unit="hours">6</ttl>
+        </expiry>
+        <heap unit="entries">1000</heap>
+    </cache>
 </config>

@@ -32,5 +32,9 @@ public interface CotipDbMapper {
 
     List<CotipEntity> toListSolarBankResponse(List<SolarBankResponse> solarBankResponseList);
 
+    CotipEntity toBnfBankResponse(BnfBankResponse bnfBankResponse);
+
+    List<CotipEntity> toListBnfBankResponse(List<BnfBankResponse> bankResponseList);
+
 
 }
