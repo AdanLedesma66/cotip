@@ -7,19 +7,19 @@ import java.util.List;
 
 public interface CotipInPort {
 
-    List<CotipDto> findLatestContinentalBankExchangeRates() throws Exception;
+    List<CotipDto> findLatestContinentalBankExchangeRates();
 
-    List<CotipDto> findLatestFamiliarBankExchangeRates() throws Exception;
+    List<CotipDto> findLatestFamiliarBankExchangeRates();
 
-    List<CotipDto> findLatestGnbBankExchangeRates() throws Exception;
+    List<CotipDto> findLatestGnbBankExchangeRates();
 
-    List<CotipDto> findLatestRioBankExchangeRates() throws Exception;
+    List<CotipDto> findLatestRioBankExchangeRates();
 
-    List<CotipDto> findLatestSolarBankExchangeRates() throws Exception;
+    List<CotipDto> findLatestSolarBankExchangeRates();
 
-    List<CotipDto> findLatestBnfBankExchangeRates() throws Exception;
+    List<CotipDto> findLatestBnfBankExchangeRates();
 
-    List<CotipDto> findLatestAtlasBankExchangeRates() throws Exception;
+    List<CotipDto> findLatestAtlasBankExchangeRates();
 
     List<CotipDto> findLatestFicFinancialExchangeRates() throws Exception;
 

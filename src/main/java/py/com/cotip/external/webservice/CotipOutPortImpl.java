@@ -9,6 +9,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.http.HttpStatus;
+import py.com.cotip.application.config.exception.CotipException;
+import py.com.cotip.domain.commons.CotipError;
 import py.com.cotip.domain.port.out.CotipOutPort;
 import py.com.cotip.domain.port.out.response.*;
 import py.com.cotip.external.webservice.config.CotipProperties;
@@ -45,7 +48,7 @@ public class CotipOutPortImpl implements CotipOutPort {
     // ::: impls
 
     @Override
-    public ContinentalBearerExternal getContinentalBearerToken() throws Exception {
+    public ContinentalBearerExternal getContinentalBearerToken() {
         log.info("Obteniendo bearer token del banco continental");
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -69,25 +72,27 @@ public class CotipOutPortImpl implements CotipOutPort {
             return bearerDto;
         } catch (IOException | InterruptedException e) {
             log.error("Error al obtener el bearer token de Banco Continental", e);
-            throw new Exception("Error al obtener las cotizaciones del Banco Continental");
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.CONTINENTAL_BANK_ERROR.getCode(),
+                    CotipError.CONTINENTAL_BANK_ERROR.getDescription());
         }
     }
 
     @Override
-    public List<ContinentalBankResponse> fetchContinentalBankExchangeRates() throws Exception {
+    public List<ContinentalBankResponse> fetchContinentalBankExchangeRates() {
         List<ContinentalBankResponse> exchangeRates = new ArrayList<>();
-
-        log.info("Obteniendo cotizacion del banco continental");
-        HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(cotipProperties.getContinentalPath()))
-                .header("Content-Type", "application/json")
-                .header("Accept", "application/json")
-                .header("Authorization", "Bearer " + getContinentalBearerToken().getAccessToken())
-                .header("Subscription-Key", "3c35bb9e5fa948adb8d64c123d9d1a45")
-                .GET()
-                .build();
         try {
+
+            log.info("Obteniendo cotizacion del banco continental");
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(cotipProperties.getContinentalPath()))
+                    .header("Content-Type", "application/json")
+                    .header("Accept", "application/json")
+                    .header("Authorization", "Bearer " + "getContinentalBearerToken().getAccessToken()")
+                    .header("Subscription-Key", "3c35bb9e5fa948adb8d64c123d9d1a45")
+                    .GET()
+                    .build();
+
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
             ObjectMapper objectMapper = new ObjectMapper();
@@ -118,13 +123,14 @@ public class CotipOutPortImpl implements CotipOutPort {
             return exchangeRates;
         } catch (IOException | InterruptedException e) {
             log.error("Error al obtener las cotizaciones de Banco Continental", e);
-            throw new Exception("Error al obtener las cotizaciones del Banco Continental");
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.CONTINENTAL_BANK_ERROR.getCode(),
+                    CotipError.CONTINENTAL_BANK_ERROR.getDescription());
         }
 
     }
 
     @Override
-    public List<FamiliarBankResponse> fetchFamiliarBankExchangeRates() throws Exception {
+    public List<FamiliarBankResponse> fetchFamiliarBankExchangeRates() {
         log.info("Obteniendo cotizacion del banco familiar");
         List<FamiliarBankResponse> exchangeRates = new ArrayList<>();
 
@@ -160,14 +166,15 @@ public class CotipOutPortImpl implements CotipOutPort {
             log.info("La llamada se ejecuto con exito");
         } catch (IOException e) {
             log.error("Error al obtener las cotizaciones de Banco Familiar", e);
-            throw new Exception("Error al obtener las cotizaciones de Banco Familiar");
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.FAMILIAR_BANK_ERROR.getCode(),
+                    CotipError.FAMILIAR_BANK_ERROR.getDescription());
         }
 
         return exchangeRates;
     }
 
     @Override
-    public List<GnbBankResponse> fetchGnbBankExchangeRates() throws Exception {
+    public List<GnbBankResponse> fetchGnbBankExchangeRates() {
         List<GnbBankResponse> exchangeRates = new ArrayList<>();
 
         log.info("Obteniendo cotizacion del banco gnb");
@@ -205,13 +212,14 @@ public class CotipOutPortImpl implements CotipOutPort {
             log.info("La llamada se ejecuto con exito");
             return exchangeRates;
         } catch (IOException | InterruptedException e) {
-            log.error("Error al obtener las cotizaciones de Banco Continental", e);
-            throw new Exception("Error al obtener las cotizaciones del Banco Continental");
+            log.error("Error al obtener las cotizaciones de Banco Gnb", e);
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.GNB_BANK_ERROR.getCode(),
+                    CotipError.GNB_BANK_ERROR.getDescription());
         }
     }
 
     @Override
-    public List<RioBankResponse> fetchRioBankExchangeRates() throws Exception {
+    public List<RioBankResponse> fetchRioBankExchangeRates() {
         List<RioBankResponse> exchangeRates = new ArrayList<>();
 
         log.info("Obteniendo cotizacion del banco continental");
@@ -256,12 +264,13 @@ public class CotipOutPortImpl implements CotipOutPort {
             return exchangeRates;
         } catch (IOException | InterruptedException e) {
             log.error("Error al obtener las cotizaciones de Banco Rio", e);
-            throw new Exception("Error al obtener las cotizaciones del Banco Rio");
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.RIO_BANK_ERROR.getCode(),
+                    CotipError.RIO_BANK_ERROR.getDescription());
         }
     }
 
     @Override
-    public List<SolarBankResponse> fetchSolarBankExchangeRates() throws Exception {
+    public List<SolarBankResponse> fetchSolarBankExchangeRates() {
         List<SolarBankResponse> exchangeRates = new ArrayList<>();
 
         try {
@@ -298,14 +307,15 @@ public class CotipOutPortImpl implements CotipOutPort {
             log.info("La llamada se ejecuto con exito");
         } catch (IOException e) {
             log.error("Error al obtener las cotizaciones de Banco Solar", e);
-            throw new Exception("Error al obtener las cotizaciones del Banco Solar");
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.SOLAR_BANK_ERROR.getCode(),
+                    CotipError.SOLAR_BANK_ERROR.getDescription());
         }
 
         return exchangeRates;
     }
 
     @Override
-    public List<BnfBankResponse> fetchBnfBankExchangeRates() throws Exception {
+    public List<BnfBankResponse> fetchBnfBankExchangeRates() {
         List<BnfBankResponse> exchangeRates = new ArrayList<>();
 
         try {
@@ -343,14 +353,15 @@ public class CotipOutPortImpl implements CotipOutPort {
             }
         } catch (IOException e) {
             log.error("Error al obtener las cotizaciones de Banco Nacional de Fomento");
-            throw new Exception("Error al obtener las cotizaciones de Banco Nacional de Fomento", e);
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.BNF_BANK_ERROR.getCode(),
+                    CotipError.BNF_BANK_ERROR.getDescription());
         }
 
         return exchangeRates;
     }
 
     @Override
-    public List<AtlasBankResponse> fetchAtlasBankExchangeRates() throws Exception {
+    public List<AtlasBankResponse> fetchAtlasBankExchangeRates() {
         List<AtlasBankResponse> exchangeRates = new ArrayList<>();
 
         try {
@@ -382,7 +393,8 @@ public class CotipOutPortImpl implements CotipOutPort {
             log.info("La llamada se ejecutó con éxito");
         } catch (IOException e) {
             log.error("Error al obtener las cotizaciones de Banco Atlas");
-            throw new Exception("Error al obtener las cotizaciones de Banco Atlas", e);
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.ATLAS_BANK_ERROR.getCode(),
+                    CotipError.ATLAS_BANK_ERROR.getDescription());
         }
 
         return exchangeRates;
@@ -443,8 +455,8 @@ public class CotipOutPortImpl implements CotipOutPort {
             log.info("La llamada se ejecutó con éxito");
         } catch (IOException e) {
             log.error("Error al obtener las cotizaciones de Financiera Fic", e);
-            throw new Exception("Error al obtener las cotizaciones de Financiera Fic", e);
-        }
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.FIC_FINANCIAL_ERROR.getCode(),
+                    CotipError.FIC_FINANCIAL_ERROR.getDescription());        }
 
         return exchangeRates;
     }

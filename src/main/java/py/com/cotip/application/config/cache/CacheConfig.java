@@ -1,4 +1,4 @@
-package py.com.cotip.application.config;
+package py.com.cotip.application.config.cache;
 
 import org.ehcache.jsr107.EhcacheCachingProvider;
 import org.springframework.cache.annotation.EnableCaching;
