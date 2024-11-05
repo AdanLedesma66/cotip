@@ -43,7 +43,7 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "continental-bank", key = "'continentalResponse'")
     @Override
-    public List<CotipDto> findLatestContinentalBankExchangeRates() throws Exception {
+    public List<CotipDto> findLatestContinentalBankExchangeRates(){
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListContinentalBankResponse(cotipOutPort.fetchContinentalBankExchangeRates()),
                 ProviderType.CONTINENTAL_BANK);
@@ -55,7 +55,7 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "familiar-bank", key = "'familiarResponse'")
     @Override
-    public List<CotipDto> findLatestFamiliarBankExchangeRates() throws Exception {
+    public List<CotipDto> findLatestFamiliarBankExchangeRates() {
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListFamiliarBankResponse(cotipOutPort.fetchFamiliarBankExchangeRates()),
                 ProviderType.FAMILIAR_BANK);
@@ -67,7 +67,7 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "gnb-bank", key = "'gnbResponse'")
     @Override
-    public List<CotipDto> findLatestGnbBankExchangeRates() throws Exception {
+    public List<CotipDto> findLatestGnbBankExchangeRates() {
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListGnbBankResponse(cotipOutPort.fetchGnbBankExchangeRates()),
                 ProviderType.GNB_BANK);
@@ -79,7 +79,7 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "rio-bank", key = "'rioResponse'")
     @Override
-    public List<CotipDto> findLatestRioBankExchangeRates() throws Exception {
+    public List<CotipDto> findLatestRioBankExchangeRates() {
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListRioBankResponse(cotipOutPort.fetchRioBankExchangeRates()),
                 ProviderType.RIO_BANK);
@@ -91,7 +91,7 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "solar-bank", key = "'solarResponse'")
     @Override
-    public List<CotipDto> findLatestSolarBankExchangeRates() throws Exception {
+    public List<CotipDto> findLatestSolarBankExchangeRates() {
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListSolarBankResponse(cotipOutPort.fetchSolarBankExchangeRates()),
                 ProviderType.SOLAR_BANK);
@@ -103,7 +103,7 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "bnf-bank", key = "'bnfResponse'")
     @Override
-    public List<CotipDto> findLatestBnfBankExchangeRates() throws Exception {
+    public List<CotipDto> findLatestBnfBankExchangeRates() {
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListBnfBankResponse(cotipOutPort.fetchBnfBankExchangeRates()),
                 ProviderType.BNF_BANK);
@@ -115,7 +115,7 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "atlas-bank", key = "'atlasResponse'")
     @Override
-    public List<CotipDto> findLatestAtlasBankExchangeRates() throws Exception {
+    public List<CotipDto> findLatestAtlasBankExchangeRates() {
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListAtlasBankResponse(cotipOutPort.fetchAtlasBankExchangeRates()),
                 ProviderType.ATLAS_BANK);
@@ -148,6 +148,9 @@ public class CotipService implements CotipInPort {
             getSelf().findLatestGnbBankExchangeRates();
             getSelf().findLatestRioBankExchangeRates();
             getSelf().findLatestSolarBankExchangeRates();
+            getSelf().findLatestBnfBankExchangeRates();
+            getSelf().findLatestAtlasBankExchangeRates();
+            getSelf().findLatestFicFinancialExchangeRates();
         } catch (Exception e) {
             log.error("Error al cargar las cotizaciones: ", e);
         }

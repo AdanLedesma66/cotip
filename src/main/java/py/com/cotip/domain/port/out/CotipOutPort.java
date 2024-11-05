@@ -7,21 +7,21 @@ import java.util.List;
 
 public interface CotipOutPort {
 
-    ContinentalBearerExternal getContinentalBearerToken() throws Exception;
+    ContinentalBearerExternal getContinentalBearerToken();
 
-    List<ContinentalBankResponse> fetchContinentalBankExchangeRates() throws Exception;
+    List<ContinentalBankResponse> fetchContinentalBankExchangeRates();
 
-    List<FamiliarBankResponse> fetchFamiliarBankExchangeRates() throws Exception;
+    List<FamiliarBankResponse> fetchFamiliarBankExchangeRates();
 
-    List<GnbBankResponse> fetchGnbBankExchangeRates() throws Exception;
+    List<GnbBankResponse> fetchGnbBankExchangeRates();
 
-    List<RioBankResponse> fetchRioBankExchangeRates() throws Exception;
+    List<RioBankResponse> fetchRioBankExchangeRates();
 
-    List<SolarBankResponse> fetchSolarBankExchangeRates() throws Exception;
+    List<SolarBankResponse> fetchSolarBankExchangeRates();
 
-    List<BnfBankResponse> fetchBnfBankExchangeRates() throws Exception;
+    List<BnfBankResponse> fetchBnfBankExchangeRates();
 
-    List<AtlasBankResponse> fetchAtlasBankExchangeRates() throws Exception;
+    List<AtlasBankResponse> fetchAtlasBankExchangeRates();
 
     List<FicFinancialResponse> fetchFicFinancialExchangeRates() throws Exception;
 

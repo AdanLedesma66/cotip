@@ -1,11 +1,14 @@
 package py.com.cotip.application.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import py.com.cotip.application.config.model.CotipResponse;
+import py.com.cotip.application.rest.model.CotipDto;
 import py.com.cotip.domain.port.in.CotipInPort;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/cotip/v1")
@@ -19,43 +22,44 @@ public class CotipApi {
     // ::: requests
 
     @GetMapping("/continental-bank")
-    public ResponseEntity continentalBank() throws Exception{
-        return ResponseEntity.ok(action.findLatestContinentalBankExchangeRates());
+    public CotipResponse<List<CotipDto>> continentalBank() {
+        return CotipResponse.of(action.findLatestContinentalBankExchangeRates());
     }
 
     @GetMapping("/familiar-bank")
-    public ResponseEntity familiarBank() throws Exception { return ResponseEntity.ok(action.findLatestFamiliarBankExchangeRates());}
+    public CotipResponse<List<CotipDto>> familiarBank() {
+        return CotipResponse.of(action.findLatestFamiliarBankExchangeRates());
+    }
 
     @GetMapping("/gnb-bank")
-    public ResponseEntity gnbBank() throws Exception {
-        return ResponseEntity.ok(action.findLatestGnbBankExchangeRates());
+    public CotipResponse<List<CotipDto>> gnbBank() {
+        return CotipResponse.of(action.findLatestGnbBankExchangeRates());
     }
 
     @GetMapping("/rio-bank")
-    public ResponseEntity rioBank() throws Exception{
-        return ResponseEntity.ok(action.findLatestRioBankExchangeRates());
+    public CotipResponse<List<CotipDto>> rioBank() {
+        return CotipResponse.of(action.findLatestRioBankExchangeRates());
     }
 
     @GetMapping("/solar-bank")
-    public ResponseEntity solarBank() throws Exception{
-        return ResponseEntity.ok(action.findLatestSolarBankExchangeRates());
+    public CotipResponse<List<CotipDto>> solarBank() {
+        return CotipResponse.of(action.findLatestSolarBankExchangeRates());
     }
 
     @GetMapping("/bnf-bank")
-    public ResponseEntity nationalDevelopmentBank() throws Exception{
-        return ResponseEntity.ok(action.findLatestBnfBankExchangeRates());
+    public CotipResponse<List<CotipDto>> nationalDevelopmentBank() {
+        return CotipResponse.of(action.findLatestBnfBankExchangeRates());
     }
 
     @GetMapping("/atlas-bank")
-    public ResponseEntity atlasBank() throws Exception{
-        return ResponseEntity.ok(action.findLatestAtlasBankExchangeRates());
+    public CotipResponse<List<CotipDto>> atlasBank() {
+        return CotipResponse.of(action.findLatestAtlasBankExchangeRates());
     }
 
     @GetMapping("/fic-financial")
-    public ResponseEntity ficFinancial() throws Exception{
-        return ResponseEntity.ok(action.findLatestFicFinancialExchangeRates());
+    public CotipResponse<List<CotipDto>> ficFinancial() throws Exception {
+        return CotipResponse.of(action.findLatestFicFinancialExchangeRates());
     }
-
 
 
 }
