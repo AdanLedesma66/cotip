@@ -9,14 +9,14 @@ public enum CotipError {
 
     // ::: errors
 
-    CONTINENTAL_BANK_ERROR("CE0001", "Error al obtener las cotizaciones del banco continental", ""),
-    FAMILIAR_BANK_ERROR("CE0002", "Error al obtener las cotizaciones de Banco Familiar", ""),
-    GNB_BANK_ERROR("CE0003", "Error al obtener las cotizaciones de Banco Gnb", ""),
-    RIO_BANK_ERROR("CE0004", "Error al obtener las cotizaciones de Banco Rio", ""),
-    SOLAR_BANK_ERROR("CE0005", "Error al obtener las cotizaciones de Banco Solar", ""),
-    BNF_BANK_ERROR("CE0005", "Error al obtener las cotizaciones de Banco Nacional de Fomento", ""),
-    ATLAS_BANK_ERROR("CE0005", "Error al obtener las cotizaciones de Banco Atlas", ""),
-    FIC_FINANCIAL_ERROR("CE0005", "Error al obtener las cotizaciones de Financiera Fic", ""),;
+    CONTINENTAL_BANK_ERROR("CE0001", "Error retrieving exchange rates from Continental Bank", ""),
+    FAMILIAR_BANK_ERROR("CE0002", "Error retrieving exchange rates from Familiar Bank", ""),
+    GNB_BANK_ERROR("CE0003", "Error retrieving exchange rates from Gnb Bank", ""),
+    RIO_BANK_ERROR("CE0004", "Error retrieving exchange rates from Rio Bank", ""),
+    SOLAR_BANK_ERROR("CE0005", "Error retrieving exchange rates from Solar Bank", ""),
+    BNF_BANK_ERROR("CE0006", "Error retrieving exchange rates from National Development Bank", ""),
+    ATLAS_BANK_ERROR("CE0007", "Error retrieving exchange rates from Atlas Bank", ""),
+    FIC_FINANCIAL_ERROR("CE0008", "Error retrieving exchange rates from Fic Financial", "");
 
     // ::: vars
 
