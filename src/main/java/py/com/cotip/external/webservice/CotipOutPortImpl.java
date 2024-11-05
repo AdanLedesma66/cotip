@@ -88,7 +88,7 @@ public class CotipOutPortImpl implements CotipOutPort {
                     .uri(URI.create(cotipProperties.getContinentalPath()))
                     .header("Content-Type", "application/json")
                     .header("Accept", "application/json")
-                    .header("Authorization", "Bearer " + "getContinentalBearerToken().getAccessToken()")
+                    .header("Authorization", "Bearer " + getContinentalBearerToken().getAccessToken())
                     .header("Subscription-Key", "3c35bb9e5fa948adb8d64c123d9d1a45")
                     .GET()
                     .build();
