@@ -45,6 +45,7 @@ Este proyecto está optimizado para su despliegue en contenedores Docker y utili
 
 La API actualmente soporta la obtención de tasas de cambio de los siguientes proveedores:
 
+- Maxicambios
 - Banco Atlas
 - Banco Continental
 - Banco Familiar
@@ -53,6 +54,5 @@ La API actualmente soporta la obtención de tasas de cambio de los siguientes pr
 - Banco Rio
 - Banco Solar
 - Financiera Fic
-- Maxicambios
 
 <p align="right">(<a href="#readme-top">volver al inicio</a>)</p>
