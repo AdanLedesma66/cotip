@@ -3,10 +3,13 @@ package py.com.cotip.application.rest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import py.com.cotip.application.config.model.CotipResponse;
 import py.com.cotip.application.rest.model.CotipDto;
+import py.com.cotip.domain.commons.CotipCity;
 import py.com.cotip.domain.port.in.CotipInPort;
+import py.com.cotip.domain.port.in.request.FindMaxiExchangeRateRequest;
 
 import java.util.List;
 
@@ -59,6 +62,17 @@ public class CotipApi {
     @GetMapping("/fic-financial")
     public CotipResponse<List<CotipDto>> ficFinancial() throws Exception {
         return CotipResponse.of(action.findLatestFicFinancialExchangeRates());
+    }
+
+    @GetMapping("/maxi-exchange")
+    public CotipResponse<List<CotipDto>> maxiExchange(
+            @RequestParam(required = false) CotipCity city
+    ){
+        FindMaxiExchangeRateRequest request = FindMaxiExchangeRateRequest.builder()
+                .city(city)
+                .build();
+
+        return CotipResponse.of(action.findLatestMaxiExchangeRates(request));
     }
 
 

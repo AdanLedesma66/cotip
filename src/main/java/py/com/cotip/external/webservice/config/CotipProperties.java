@@ -37,4 +37,7 @@ public class CotipProperties {
 
     @Value("${cotip.fic.financial.path}")
     private String ficFinancialPath;
+
+    @Value("${cotip.maxicambios.path}")
+    private String maxicambiosPath;
 }

@@ -44,5 +44,9 @@ public interface CotipDbMapper {
 
     List<CotipEntity> toListFicFinancialResponse(List<FicFinancialResponse> ficFinancialResponseList);
 
+    CotipEntity toMaxiCambiosResponse(MaxiExchangeResponse maxiCambioResponse);
+
+    List<CotipEntity> toListMaxiCambiosResponse(List<MaxiExchangeResponse> maxiCambioResponseList);
+
 
 }

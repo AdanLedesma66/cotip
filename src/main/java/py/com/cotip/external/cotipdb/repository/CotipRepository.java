@@ -18,4 +18,7 @@ public interface CotipRepository extends JpaRepository<CotipEntity, UUID> {
     @Query("SELECT c FROM CotipEntity c WHERE c.provider = :tipoProveedor AND c.uploadDate = (SELECT MAX(c2.uploadDate) FROM CotipEntity c2 WHERE c2.provider = :tipoProveedor AND c2.exchangeRate = c.exchangeRate)")
     List<CotipEntity> findLatestCotizacionesByProvider(@Param("tipoProveedor") ProviderType tipoProveedor);
 
+    @Query("SELECT c FROM CotipEntity c WHERE c.provider = :tipoProveedor AND c.city = :city AND c.uploadDate = (SELECT MAX(c2.uploadDate) FROM CotipEntity c2 WHERE c2.provider = :tipoProveedor AND c2.exchangeRate = c.exchangeRate AND c2.city = :city)")
+    List<CotipEntity> findLatestCotizacionesByProviderAndCity(@Param("tipoProveedor") ProviderType tipoProveedor, @Param("city") String city);
+
 }

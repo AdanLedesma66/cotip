@@ -25,4 +25,6 @@ public interface CotipOutPort {
 
     List<FicFinancialResponse> fetchFicFinancialExchangeRates() throws Exception;
 
+    List<MaxiExchangeResponse> fetchMaxiCambiosExchangeRates();
+
 }

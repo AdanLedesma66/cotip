@@ -33,9 +33,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @AllArgsConstructor
@@ -456,11 +454,74 @@ public class CotipOutPortImpl implements CotipOutPort {
         } catch (IOException e) {
             log.error("Error al obtener las cotizaciones de Financiera Fic", e);
             throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.FIC_FINANCIAL_ERROR.getCode(),
-                    CotipError.FIC_FINANCIAL_ERROR.getDescription());        }
+                    CotipError.FIC_FINANCIAL_ERROR.getDescription());
+        }
 
         return exchangeRates;
     }
 
+    @Override
+    public List<MaxiExchangeResponse> fetchMaxiCambiosExchangeRates() {
+        List<MaxiExchangeResponse> exchangeRates = new ArrayList<>();
+
+        try {
+            Document doc = Jsoup.connect(cotipProperties.getMaxicambiosPath()).get();
+
+            Map<String, String> sectionsMap = Map.of(
+                    "Asunción", "cotizacion-carousel",
+                    "Ciudad del Este", "cotizacion-cd",
+                    "Cheque Transferencia", "cotizacion-cheq-tra",
+                    "Arbitraje", "cotizacion-arbi"
+            );
+
+            for (Map.Entry<String, String> entry : sectionsMap.entrySet()) {
+                String sectionName = entry.getKey();
+                String sectionId = entry.getValue();
+
+                Elements currencyItems = doc.select("#" + sectionId + " .cotizDivSmall");
+
+                for (Element item : currencyItems) {
+                    String exchangeRate = item.select("p[style*=text-overflow], p[style*=font-size]").first().text().trim();
+
+                    String buyRateText = item.select("p:contains(Compra) + p").text().replace(",", ".").split(" ")[0];
+                    String sellRateText = item.select("p:contains(Venta) + p").text().replace(",", ".").split(" ")[0];
+
+                    BigDecimal buyRate = new BigDecimal(buyRateText).setScale(0, RoundingMode.DOWN);
+                    BigDecimal sellRate = new BigDecimal(sellRateText).setScale(0, RoundingMode.DOWN);
+
+                    if ("Cheque Transferencia".equals(sectionName)) {
+                        if (exchangeRate.equalsIgnoreCase("Dólar")) {
+                            exchangeRate = "Dólar Cheque / Transferencia";
+                        } else if (exchangeRate.equalsIgnoreCase("Euro")) {
+                            exchangeRate = "Euro Cheque / Transferencia";
+                        }
+                    }
+
+                    String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
+                    String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(standardizedExchangeRate);
+
+                    if (standardizedExchangeRate != null && standardizedCurrencyCode != null) {
+                        MaxiExchangeResponse response = MaxiExchangeResponse.builder()
+                                .exchangeRate(standardizedExchangeRate)
+                                .currencyCode(standardizedCurrencyCode)
+                                .buyRate(buyRate.longValue())
+                                .sellRate(sellRate.longValue())
+                                .city("Cheque Transferencia".equals(sectionName) ? null : sectionName)
+                                .build();
+                        exchangeRates.add(response);
+                    }
+                }
+            }
+
+            log.info("La llamada se ejecutó con éxito");
+        } catch (IOException e) {
+            log.error("Error al obtener las cotizaciones de MaxiCambios", e);
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.MAXI_CAMBIOS_ERROR.getCode(),
+                    CotipError.MAXI_CAMBIOS_ERROR.getDescription());
+        }
+
+        return exchangeRates;
+    }
 
     // ::: externals
 

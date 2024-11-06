@@ -11,4 +11,6 @@ public interface CotipDbOutPort {
 
     List<CotipEntity> findAllByProviderOrderByUploadDate(ProviderType tipoProvedor);
 
+    List<CotipEntity> findAllByProviderAndCityOrderByUploadDate(ProviderType tipoProvedor, String city);
+
 }
