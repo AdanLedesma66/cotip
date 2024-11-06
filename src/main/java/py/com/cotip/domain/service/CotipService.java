@@ -164,6 +164,7 @@ public class CotipService implements CotipInPort {
             getSelf().findLatestBnfBankExchangeRates();
             getSelf().findLatestAtlasBankExchangeRates();
             getSelf().findLatestFicFinancialExchangeRates();
+            getSelf().findLatestMaxiExchangeRates(FindMaxiExchangeRateRequest.builder().build());
         } catch (Exception e) {
             log.error("Error al cargar las cotizaciones: ", e);
         }
