@@ -9,6 +9,7 @@ import py.com.cotip.application.rest.model.CotipDto;
 import py.com.cotip.domain.commons.ProviderType;
 import py.com.cotip.domain.mapper.CotipDomainMapper;
 import py.com.cotip.domain.port.in.CotipInPort;
+import py.com.cotip.domain.port.in.request.FindMaxiExchangeRateRequest;
 import py.com.cotip.domain.port.out.CotipDbOutPort;
 import py.com.cotip.domain.port.out.CotipOutPort;
 import py.com.cotip.external.cotipdb.mapper.CotipDbMapper;
@@ -43,7 +44,7 @@ public class CotipService implements CotipInPort {
 
     @Cacheable(value = "continental-bank", key = "'continentalResponse'")
     @Override
-    public List<CotipDto> findLatestContinentalBankExchangeRates(){
+    public List<CotipDto> findLatestContinentalBankExchangeRates() {
         log.info("Guardamos las cotizaciones");
         saveAllCotipEntities(CotipDbMapper.INSTANCE.toListContinentalBankResponse(cotipOutPort.fetchContinentalBankExchangeRates()),
                 ProviderType.CONTINENTAL_BANK);
@@ -125,7 +126,7 @@ public class CotipService implements CotipInPort {
                 (ProviderType.ATLAS_BANK));
     }
 
-    @Cacheable(value = "fic-financial", key = "'atlasResponse'")
+    @Cacheable(value = "fic-financial", key = "'ficResponse'")
     @Override
     public List<CotipDto> findLatestFicFinancialExchangeRates() throws Exception {
         log.info("Guardamos las cotizaciones");
@@ -135,6 +136,18 @@ public class CotipService implements CotipInPort {
         log.info("Obtenemos la ultima cotizacion guardada");
         return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
                 (ProviderType.FIC_FINANCIAL));
+    }
+
+    @Cacheable(value = "maxi-exchange", key = "'maxiResponse'")
+    @Override
+    public List<CotipDto> findLatestMaxiExchangeRates(FindMaxiExchangeRateRequest request) {
+        log.info("Guardamos las cotizaciones");
+        saveAllCotipEntities(CotipDbMapper.INSTANCE.toListMaxiCambiosResponse(cotipOutPort.fetchMaxiCambiosExchangeRates()),
+                ProviderType.MAXI_CAMBIOS);
+
+        log.info("Obtenemos la ultima cotizacion guardada");
+        return CotipDomainMapper.INSTANCE.toListCotipDto(cotipDbOutPort.findAllByProviderOrderByUploadDate
+                (ProviderType.MAXI_CAMBIOS));
     }
 
     // ::: externals
@@ -151,6 +164,7 @@ public class CotipService implements CotipInPort {
             getSelf().findLatestBnfBankExchangeRates();
             getSelf().findLatestAtlasBankExchangeRates();
             getSelf().findLatestFicFinancialExchangeRates();
+            getSelf().findLatestMaxiExchangeRates(FindMaxiExchangeRateRequest.builder().build());
         } catch (Exception e) {
             log.error("Error al cargar las cotizaciones: ", e);
         }

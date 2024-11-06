@@ -16,7 +16,8 @@ public enum CotipError {
     SOLAR_BANK_ERROR("CE0005", "Error retrieving exchange rates from Solar Bank", ""),
     BNF_BANK_ERROR("CE0006", "Error retrieving exchange rates from National Development Bank", ""),
     ATLAS_BANK_ERROR("CE0007", "Error retrieving exchange rates from Atlas Bank", ""),
-    FIC_FINANCIAL_ERROR("CE0008", "Error retrieving exchange rates from Fic Financial", "");
+    FIC_FINANCIAL_ERROR("CE0008", "Error retrieving exchange rates from Fic Financial", ""),
+    MAXI_CAMBIOS_ERROR("CE0009", "Error retrieving exchange rates from Maxicambios", "");
 
     // ::: vars
 

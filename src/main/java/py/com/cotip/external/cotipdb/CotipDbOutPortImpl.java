@@ -51,6 +51,11 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
         return cotipRepository.findLatestCotizacionesByProvider(tipoProvedor);
     }
 
+    @Override
+    public List<CotipEntity> findAllByProviderAndCityOrderByUploadDate(ProviderType tipoProvedor, String city) {
+        return cotipRepository.findLatestCotizacionesByProviderAndCity(tipoProvedor, city);
+    }
+
     // ::: externals
 
     private RateChange compareRates(Long currentRate, Long previousRate) {
