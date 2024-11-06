@@ -53,5 +53,6 @@ La API actualmente soporta la obtención de tasas de cambio de los siguientes pr
 - Banco Rio
 - Banco Solar
 - Financiera Fic
+- Maxicambios
 
 <p align="right">(<a href="#readme-top">volver al inicio</a>)</p>
