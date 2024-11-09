@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import py.com.cotip.domain.commons.RateChange;
 import py.com.cotip.domain.commons.ProviderType;
 import py.com.cotip.domain.port.out.CotipDbOutPort;
+import py.com.cotip.external.cotipdb.model.CotipDetails;
 import py.com.cotip.external.cotipdb.model.CotipEntity;
 import py.com.cotip.external.cotipdb.repository.CotipRepository;
 
@@ -28,9 +29,12 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
             Optional<CotipEntity> lastCotipEntity = cotipRepository.findTopByExchangeRateAndProviderOrderByUploadDateDesc(
                     cotipEntity.getExchangeRate(), tipoProveedor);
 
+            CotipDetails cotipDetails = CotipDetails.builder().build();
+
             cotipEntity.setId(UUID.randomUUID());
             cotipEntity.setEnabled(true);
             cotipEntity.setProvider(tipoProveedor);
+            cotipEntity.setCotipDetails(cotipDetails);
 
             if (lastCotipEntity.isPresent()) {
                 CotipEntity previousCotip = lastCotipEntity.get();
