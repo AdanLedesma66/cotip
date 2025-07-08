@@ -99,6 +99,7 @@ public class CotipOutPortImpl implements CotipOutPort {
                     });
 
             cotizacionExternal.forEach(cotizacion -> {
+
                 String exchangeRate = cotizacion.getExchangeRate();
                 String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
                 String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(standardizedExchangeRate));

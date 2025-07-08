@@ -17,12 +17,12 @@ import java.util.List;
 @RequestMapping("/cotip/v1")
 public class CotipApi {
 
-    // :::
+    // ::: API
 
     @Autowired
     private CotipInPort action;
 
-    // ::: requests
+    // ::: REQUEST
 
     @GetMapping("/continental-bank")
     public CotipResponse<List<CotipDto>> continentalBank() {

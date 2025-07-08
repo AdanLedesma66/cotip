@@ -150,7 +150,7 @@ public class CotipService implements CotipInPort {
                 (ProviderType.MAXI_CAMBIOS));
     }
 
-    // ::: externals
+    // ::: EXTERNALS
 
     @Scheduled(cron = "0 0 */6 * * *")
     public void cacheCotizacionesDiarias() {
