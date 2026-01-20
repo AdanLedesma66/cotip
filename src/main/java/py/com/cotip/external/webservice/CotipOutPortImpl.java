@@ -196,13 +196,11 @@ public class CotipOutPortImpl implements CotipOutPort {
                     BigDecimal buyRate = new BigDecimal(buyRateText).setScale(0, RoundingMode.DOWN);
                     BigDecimal sellRate = new BigDecimal(sellRateText).setScale(0, RoundingMode.DOWN);
 
-                    if ("Cheque Transferencia".equals(sectionName)) {
-                        if (exchangeRate.equalsIgnoreCase("Dólar")) {
-                            exchangeRate = "Dólar Cheque / Transferencia";
-                        } else if (exchangeRate.equalsIgnoreCase("Euro")) {
-                            exchangeRate = "Euro Cheque / Transferencia";
-                        }
-                    }
+                    exchangeRate = switch (exchangeRate.toLowerCase()) {
+                        case "dólar" -> "Dólar Cheque / Transferencia";
+                        case "euro" -> "Euro Cheque / Transferencia";
+                        default -> exchangeRate;
+                    };
 
                     String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
                     String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(standardizedExchangeRate);
@@ -232,13 +230,19 @@ public class CotipOutPortImpl implements CotipOutPort {
 
     // ::: externals
 
-    static Long stringToLong(String value) {
-        if (value == null || value.isEmpty()) {
-            return null;
-        }
-        BigDecimal decimalValue = new BigDecimal(value.replace(",", "").trim());
-        return decimalValue.longValue();
-    }
+    static Long stringToLong(Object value) {
+        if (value == null) return null;
 
+        if (value instanceof String s) {
+            BigDecimal decimalValue = new BigDecimal(s.replace(",", "").trim());
+            return decimalValue.longValue();
+        } else if (value instanceof BigDecimal bd) {
+            return bd.longValue();
+        } else if (value instanceof Number n) {
+            return n.longValue();
+        } else {
+            throw new IllegalArgumentException("Tipo no soportado: " + value.getClass());
+        }
+    }
 
 }
