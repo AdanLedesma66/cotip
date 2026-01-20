@@ -18,6 +18,7 @@ import py.com.cotip.external.webservice.util.CurrencyUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 @Slf4j
 public class CotipService implements CotipInPort {
@@ -27,14 +28,17 @@ public class CotipService implements CotipInPort {
     private final CotipOutPort cotipOutPort;
     private final CotipDbOutPort cotipDbOutPort;
     private final ApplicationContext applicationContext;
+    private final ExecutorService virtualThreadExecutor;
 
     // ::: constructor
 
-    public CotipService(CotipOutPort cotipOutPort, CotipDbOutPort cotipDbOutPort, @Lazy ApplicationContext applicationContext) {
+    public CotipService(CotipOutPort cotipOutPort, CotipDbOutPort cotipDbOutPort, ApplicationContext applicationContext, ExecutorService virtualThreadExecutor) {
         this.cotipOutPort = cotipOutPort;
         this.cotipDbOutPort = cotipDbOutPort;
         this.applicationContext = applicationContext;
+        this.virtualThreadExecutor = virtualThreadExecutor;
     }
+
 
     // ::: service se inyecta asi mismo para obtener las respuestas cacheadas
 
@@ -84,14 +88,15 @@ public class CotipService implements CotipInPort {
 
     @Scheduled(cron = "0 0 */6 * * *")
     public void cacheCotizacionesDiarias() {
-        try {
-            log.info("Ejecutando carga de cotizaciones cada 6 horas");
-            getSelf().findLatestContinentalBankExchangeRates();
-            getSelf().findLatestGnbBankExchangeRates();
-            getSelf().findLatestMaxiExchangeRates(FindMaxiExchangeRateRequest.builder().build());
-        } catch (Exception e) {
-            log.error("Error al cargar las cotizaciones: ", e);
-        }
+        log.info("Ejecutando carga de cotizaciones cada 6 horas");
+
+        List<Runnable> tasks = List.of(
+                cotipOutPort::fetchContinentalBankExchangeRates,
+                cotipOutPort::fetchGnbBankExchangeRates,
+                cotipOutPort::fetchMaxiCambiosExchangeRates
+        );
+
+        tasks.forEach(virtualThreadExecutor::submit);
     }
 
 

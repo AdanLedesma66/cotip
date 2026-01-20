@@ -9,6 +9,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import py.com.cotip.application.config.exception.CotipException;
 import py.com.cotip.domain.commons.CotipError;
 import py.com.cotip.domain.port.out.CotipOutPort;
@@ -47,6 +49,11 @@ public class CotipOutPortImpl implements CotipOutPort {
     // ::: impls
 
     @Override
+    @Retryable(
+            value = { CotipException.class, IOException.class },
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000)
+    )
     public ContinentalBearerExternal getContinentalBearerToken() {
         log.info("Obteniendo bearer token del banco continental");
         HttpClient client = HttpClient.newHttpClient();
@@ -71,12 +78,19 @@ public class CotipOutPortImpl implements CotipOutPort {
             return bearerDto;
         } catch (Exception e) {
             log.error("Error al obtener el bearer token de Banco Continental", e);
-            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.CONTINENTAL_BANK_ERROR.getCode(),
-                    CotipError.CONTINENTAL_BANK_ERROR.getDescription());
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    CotipError.CONTINENTAL_BANK_ERROR.getCode(),
+                    CotipError.CONTINENTAL_BANK_ERROR.getDescription(),
+                    true);
         }
     }
 
     @Override
+    @Retryable(
+            value = { CotipException.class, IOException.class },
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000)
+    )
     public List<ContinentalBankResponse> fetchContinentalBankExchangeRates() {
         List<ContinentalBankResponse> exchangeRates = new ArrayList<>();
         try {
@@ -119,13 +133,20 @@ public class CotipOutPortImpl implements CotipOutPort {
             return exchangeRates;
         } catch (IOException | InterruptedException e) {
             log.error("Error al obtener las cotizaciones de Banco Continental", e);
-            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.CONTINENTAL_BANK_ERROR.getCode(),
-                    CotipError.CONTINENTAL_BANK_ERROR.getDescription());
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    CotipError.CONTINENTAL_BANK_ERROR.getCode(),
+                    CotipError.CONTINENTAL_BANK_ERROR.getDescription(),
+                    true);
         }
 
     }
 
     @Override
+    @Retryable(
+            value = { CotipException.class, IOException.class },
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000)
+    )
     public List<GnbBankResponse> fetchGnbBankExchangeRates() {
         List<GnbBankResponse> exchangeRates = new ArrayList<>();
 
@@ -137,6 +158,27 @@ public class CotipOutPortImpl implements CotipOutPort {
                 .build();
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() >= 400) {
+                log.error("Error en API externa GNB: statusCode={}, body={}", response.statusCode(), response.body());
+                throw new CotipException(
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        CotipError.GNB_BANK_ERROR.getCode(),
+                        CotipError.GNB_BANK_ERROR.getDescription(),
+                        true
+                );
+            }
+
+            String contentType = response.headers().firstValue("Content-Type").orElse("");
+            if (!contentType.contains("application/json")) {
+                log.error("Respuesta inesperada de GNB: Content-Type={}, body={}", contentType, response.body());
+                throw new CotipException(
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        CotipError.GNB_BANK_ERROR.getCode(),
+                        "Respuesta inesperada de API externa: " + contentType + " -> " + response.body(),
+                        true
+                );
+            }
 
             ObjectMapper objectMapper = new ObjectMapper();
             ListadoGbnExternal listadoGbnExternal = objectMapper.readValue(response.body(),
@@ -162,12 +204,19 @@ public class CotipOutPortImpl implements CotipOutPort {
             return exchangeRates;
         } catch (IOException | InterruptedException e) {
             log.error("Error al obtener las cotizaciones de Banco Gnb", e);
-            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.GNB_BANK_ERROR.getCode(),
-                    CotipError.GNB_BANK_ERROR.getDescription());
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    CotipError.GNB_BANK_ERROR.getCode(),
+                    CotipError.GNB_BANK_ERROR.getDescription(),
+                    true);
         }
     }
 
     @Override
+    @Retryable(
+            value = { CotipException.class, IOException.class },
+            maxAttempts = 3,
+            backoff = @Backoff(delay = 2000)
+    )
     public List<MaxiExchangeResponse> fetchMaxiCambiosExchangeRates() {
         List<MaxiExchangeResponse> exchangeRates = new ArrayList<>();
 
@@ -205,7 +254,7 @@ public class CotipOutPortImpl implements CotipOutPort {
                     String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
                     String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(standardizedExchangeRate);
 
-                    if (standardizedExchangeRate != null && standardizedCurrencyCode != null) {
+                    if (standardizedCurrencyCode != null) {
                         MaxiExchangeResponse response = MaxiExchangeResponse.builder()
                                 .exchangeRate(standardizedExchangeRate)
                                 .currencyCode(standardizedCurrencyCode)
@@ -221,8 +270,10 @@ public class CotipOutPortImpl implements CotipOutPort {
             log.info("La llamada se ejecutó con éxito");
         } catch (IOException e) {
             log.error("Error al obtener las cotizaciones de MaxiCambios", e);
-            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(), CotipError.MAXI_CAMBIOS_ERROR.getCode(),
-                    CotipError.MAXI_CAMBIOS_ERROR.getDescription());
+            throw new CotipException(HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                    CotipError.MAXI_CAMBIOS_ERROR.getCode(),
+                    CotipError.MAXI_CAMBIOS_ERROR.getDescription(),
+                    true);
         }
 
         return exchangeRates;

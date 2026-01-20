@@ -56,7 +56,6 @@ public class CotipResponse<T> {
         error.put("code", ex.getCode());
         error.put("description", ex.getDescription());
         error.put("extra", ex.getExtra());
-        error.put("text", ex.getText());
         error.put("isUserMessage", ex.isUserMessage());
 
         Map<String, Object> body = new HashMap<>();
@@ -75,7 +74,6 @@ public class CotipResponse<T> {
         error.put("code", "UNKNOWN_ERROR");
         error.put("description", "An unexpected error occurred");
         error.put("extra", null);
-        error.put("text", t.getMessage());
 
         Map<String, Object> body = new HashMap<>();
         body.put("failure", error);
