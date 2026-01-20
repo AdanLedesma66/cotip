@@ -9,13 +9,31 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 public class CotipProperties {
 
-    // ::: vars
+    // ::: General bank paths
 
     @Value("${cotip.continental.bank.bearer.path}")
     private String continentalBearerTokenPath;
 
+    @Value("${cotip.continental.bank.bearer.apikey}")
+    private String continentalBearerTokenApiKey;
+
+    @Value("${cotip.continental.bank.bearer.client}")
+    private String continentalBearerTokenClient;
+
+    @Value("${cotip.continental.bank.bearer.client-id}")
+    private String continentalBearerTokenClientId;
+
+    @Value("${cotip.continental.bank.bearer.grant-Type}")
+    private String continentalBearerTokenGrantType;
+
+    @Value("${cotip.continental.bank.bearer.scope}")
+    private String continentalBearerTokenScope;
+
     @Value("${cotip.continental.bank.path}")
     private String continentalPath;
+
+    @Value("${cotip.continental.bank.apikey}")
+    private String continentalApiKey;
 
     @Value("${cotip.familiar.bank.path}")
     private String familiarPath;
@@ -40,4 +58,5 @@ public class CotipProperties {
 
     @Value("${cotip.maxicambios.path}")
     private String maxicambiosPath;
+
 }

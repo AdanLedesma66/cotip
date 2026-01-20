@@ -1,9 +1,14 @@
 package py.com.cotip.external.cotipdb.model;
 
 import jakarta.persistence.Column;
-import lombok.Data;
+import jakarta.persistence.Table;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "cotip_entity")
 public class CotipLocation {
 
     // ::: vars

@@ -12,47 +12,64 @@ En Paraguay, las tasas de cambio de monedas pueden variar significativamente ent
 - **Almacena la información de manera estructurada**: La API guarda las tasas de cambio en una base de datos PostgreSQL, lo que permite su acceso histórico y en tiempo real.
 - **Facilita el acceso programático**: Al ofrecer una API estandarizada, Cotip permite que otros sistemas y aplicaciones consuman estos datos de cambio sin problemas.
 
-Este proyecto está optimizado para su despliegue en contenedores Docker y utiliza Jenkins para automatizar la integración y el despliegue continuo, lo que garantiza que las actualizaciones y mejoras se realicen de manera rápida y eficiente.
+## Tecnologías utilizadas
 
-<p align="right">(<a href="#readme-top">volver al inicio</a>)</p>
+- ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
+- ![Spring Boot](https://img.shields.io/badge/spring--boot-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+- Spring Boot 4+
+- H2 Database (en memoria)
+- Spring Cache
+- Spring Retry
+- Virtual Threads (Project Loom)
+- Maven
 
-### Tecnologías Principales
+---
 
-* ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=java&logoColor=white)
-* ![Spring Boot](https://img.shields.io/badge/spring--boot-%236DB33F.svg?style=for-the-badge&logo=spring&logoColor=white)
+## Requisitos previos
 
-### Herramientas de Soporte
+Para ejecutar el proyecto es necesario contar con:
 
-* ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
-* ![Jenkins](https://img.shields.io/badge/jenkins-%23D24939.svg?style=for-the-badge&logo=jenkins&logoColor=white)
-* ![PostgreSQL](https://img.shields.io/badge/postgresql-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+- JDK 21 o superior
+- Maven 3.9 o superior
+- Un IDE compatible con Spring Boot
 
-<p align="right">(<a href="#readme-top">volver al inicio</a>)</p>
+Para verificar la versión de Java:
 
-## Roadmap
+```bash
+java -version
+Ejecución del proyecto
+Clonar el repositorio:
 
-> **Nota:** La mayoría de los elementos en el roadmap están actualmente en desarrollo. Las contribuciones son bienvenidas para acelerar el progreso de estas funcionalidades.
+git clone https://github.com/AdanLedesma66/cotip.git
+cd cotip
+Ejecutar en modo desarrollo con Maven:
 
-- [x] Crear la API para obtener tasas de cambio y almacenarlas en PostgreSQL.
-- [ ] Añadir soporte para nuevos proveedores de datos de cambio. *(En desarrollo)*
-- [ ] Ampliar la documentación de la API con ejemplos de uso y mejores prácticas. *(En desarrollo)*
-- [ ] Integración con herramientas de visualización y análisis de datos. *(En desarrollo)*
-- [ ] Mejoras de rendimiento y escalabilidad en entornos Docker. *(En desarrollo)*
+mvn spring-boot:run
+Ejecutar como aplicación empaquetada:
 
-<p align="right">(<a href="#readme-top">volver al inicio</a>)</p>
+mvn clean package
+java -jar target/*.jar
+Ejemplo de servicios:
 
-## Proveedores
+curl --location 'localhost:8080/cotip/v1/banco-continental'
+Response:
 
-La API actualmente soporta la obtención de tasas de cambio de los siguientes proveedores:
-
-- Maxicambios
-- Banco Atlas
-- Banco Continental
-- Banco Familiar
-- Banco Gnb
-- Banco Nacional de Fomento
-- Banco Rio
-- Banco Solar
-- Financiera Fic
-
-<p align="right">(<a href="#readme-top">volver al inicio</a>)</p>
+{
+  "data": [
+    {
+      "exchangeRate": "US Dollar Check/Transfer",
+      "currencyCode": "USD",
+      "buyRate": 6560,
+      "sellRate": 6800,
+      "buyRateStatus": "UNCHANGED",
+      "sellRateStatus": "UNCHANGED",
+      "enabled": true,
+      "provider": "Continental Bank",
+      "location": null,
+      "city": null,
+      "lastUpdated": "2026-01-20T13:56:40.7522049-03:00"
+    }
+  ]
+}
+```
+<p align="right">(<a href="#readme-top">volver al inicio</a>)</p> 

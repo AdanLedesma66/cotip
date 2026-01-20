@@ -15,7 +15,8 @@ public class CotipConfig {
     // ::: beans
 
     @Bean
-    public CotipInPort cotizacionService(CotipOutPort cotizacionOutPort, CotipDbOutPort cotipDbOutPort, ApplicationContext applicationContext) {
-        return new CotipService(cotizacionOutPort, cotipDbOutPort, applicationContext);
+    public CotipInPort cotizacionService(CotipOutPort cotizacionOutPort, CotipDbOutPort cotipDbOutPort,
+                                         ApplicationContext applicationContext, ThreadConfig threadConfig) {
+        return new CotipService(cotizacionOutPort, cotipDbOutPort, applicationContext, threadConfig.virtualThreadExecutor());
     }
 }

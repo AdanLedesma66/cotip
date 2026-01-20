@@ -7,11 +7,12 @@ import py.com.cotip.external.cotipdb.config.CotipBaseEntity;
 import py.com.cotip.external.cotipdb.util.RateChangeConverter;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
-@Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "cotip_entity")
+@Entity
 public class CotipEntity extends CotipBaseEntity {
 
     // ::: vars

@@ -10,19 +10,7 @@ public interface CotipInPort {
 
     List<CotipDto> findLatestContinentalBankExchangeRates();
 
-    List<CotipDto> findLatestFamiliarBankExchangeRates();
-
     List<CotipDto> findLatestGnbBankExchangeRates();
-
-    List<CotipDto> findLatestRioBankExchangeRates();
-
-    List<CotipDto> findLatestSolarBankExchangeRates();
-
-    List<CotipDto> findLatestBnfBankExchangeRates();
-
-    List<CotipDto> findLatestAtlasBankExchangeRates();
-
-    List<CotipDto> findLatestFicFinancialExchangeRates() throws Exception;
 
     List<CotipDto> findLatestMaxiExchangeRates(FindMaxiExchangeRateRequest request);
 

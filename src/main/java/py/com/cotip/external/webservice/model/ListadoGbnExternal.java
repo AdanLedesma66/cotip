@@ -1,14 +1,10 @@
 package py.com.cotip.external.webservice.model;
 
-import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
-@Data
-public class ListadoGbnExternal {
-
-    // ::: vars
-
-    private List<GnbExternal> exchangeRates;
-
-}
+@JsonIgnoreProperties(ignoreUnknown = true)
+public record ListadoGbnExternal(
+        List<GnbExternal> exchangeRates
+) {}

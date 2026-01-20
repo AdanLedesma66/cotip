@@ -19,7 +19,7 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
 
     private CotipRepository cotipRepository;
 
-    // ::: impls
+    // ::: IMPLS
 
     @Override
     public List<CotipEntity> saveAllCotipEntity(List<CotipEntity> cotipEntities, ProviderType tipoProveedor) {
@@ -29,12 +29,9 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
             Optional<CotipEntity> lastCotipEntity = cotipRepository.findTopByExchangeRateAndProviderOrderByUploadDateDesc(
                     cotipEntity.getExchangeRate(), tipoProveedor);
 
-            CotipDetails cotipDetails = CotipDetails.builder().build();
-
             cotipEntity.setId(UUID.randomUUID());
             cotipEntity.setEnabled(true);
             cotipEntity.setProvider(tipoProveedor);
-            cotipEntity.setCotipDetails(cotipDetails);
 
             if (lastCotipEntity.isPresent()) {
                 CotipEntity previousCotip = lastCotipEntity.get();
@@ -53,11 +50,6 @@ public class CotipDbOutPortImpl implements CotipDbOutPort {
     @Override
     public List<CotipEntity> findAllByProviderOrderByUploadDate(ProviderType tipoProvedor) {
         return cotipRepository.findLatestCotizacionesByProvider(tipoProvedor);
-    }
-
-    @Override
-    public List<CotipEntity> findAllByProviderAndCityOrderByUploadDate(ProviderType tipoProvedor, String city) {
-        return cotipRepository.findLatestCotizacionesByProviderAndCity(tipoProvedor, city);
     }
 
     // ::: externals
