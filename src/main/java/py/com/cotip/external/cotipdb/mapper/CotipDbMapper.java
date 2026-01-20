@@ -20,29 +20,9 @@ public interface CotipDbMapper {
 
     List<CotipEntity> toListContinentalBankResponse(List<ContinentalBankResponse> continentalResponse);
 
-    CotipEntity toRioBankResponse(RioBankResponse rioBankResponse);
-
-    List<CotipEntity> toListRioBankResponse(List<RioBankResponse> rioBankResponseList);
-
     CotipEntity toGnbBankResponse(GnbBankResponse gnbBankResponse);
 
     List<CotipEntity> toListGnbBankResponse(List<GnbBankResponse> gnbBankResponseList);
-
-    CotipEntity toSolarBankResponse(SolarBankResponse solarBankResponse);
-
-    List<CotipEntity> toListSolarBankResponse(List<SolarBankResponse> solarBankResponseList);
-
-    CotipEntity toBnfBankResponse(BnfBankResponse bnfBankResponse);
-
-    List<CotipEntity> toListBnfBankResponse(List<BnfBankResponse> bankResponseList);
-
-    CotipEntity toAtlasBankResponse(AtlasBankResponse atlasBankResponse);
-
-    List<CotipEntity> toListAtlasBankResponse(List<AtlasBankResponse> atlasBankResponseList);
-
-    CotipEntity toFicFinancialResponse(FicFinancialResponse ficFinancialResponse);
-
-    List<CotipEntity> toListFicFinancialResponse(List<FicFinancialResponse> ficFinancialResponseList);
 
     CotipEntity toMaxiCambiosResponse(MaxiExchangeResponse maxiCambioResponse);
 

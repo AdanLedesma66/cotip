@@ -11,19 +11,7 @@ public interface CotipOutPort {
 
     List<ContinentalBankResponse> fetchContinentalBankExchangeRates();
 
-    List<FamiliarBankResponse> fetchFamiliarBankExchangeRates();
-
     List<GnbBankResponse> fetchGnbBankExchangeRates();
-
-    List<RioBankResponse> fetchRioBankExchangeRates();
-
-    List<SolarBankResponse> fetchSolarBankExchangeRates();
-
-    List<BnfBankResponse> fetchBnfBankExchangeRates();
-
-    List<AtlasBankResponse> fetchAtlasBankExchangeRates();
-
-    List<FicFinancialResponse> fetchFicFinancialExchangeRates() throws Exception;
 
     List<MaxiExchangeResponse> fetchMaxiCambiosExchangeRates();
 

@@ -9,7 +9,6 @@ import py.com.cotip.external.cotipdb.factory.CotipSaveStrategy;
 import py.com.cotip.external.cotipdb.model.CotipDetails;
 import py.com.cotip.external.cotipdb.model.CotipEntity;
 import py.com.cotip.external.cotipdb.model.CotipLocation;
-import py.com.cotip.external.cotipdb.model.CotipSchedule;
 import py.com.cotip.external.cotipdb.repository.CotipRepository;
 import py.com.cotip.external.cotipdb.util.CotipConverter;
 
@@ -44,10 +43,8 @@ public class GenericProviderStrategy implements CotipSaveStrategy {
             cotipDetails.setCorreo(providerDetails.getEmail());
 
             CotipLocation location = CotipConverter.convertToModelLocation(providerDetails.getLocation());
-            CotipSchedule schedule = CotipConverter.convertToModelSchedule(providerDetails.getSchedule());
 
             cotipDetails.setLocation(location);
-            cotipDetails.setSchedule(schedule);
             cotipDetails.setWebsite(providerDetails.getWebsite());
             cotipDetails.setWhatsappLink(providerDetails.getWhatsappLink());
 

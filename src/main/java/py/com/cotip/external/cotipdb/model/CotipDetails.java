@@ -1,12 +1,10 @@
 package py.com.cotip.external.cotipdb.model;
 
 import jakarta.persistence.Column;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -22,9 +20,6 @@ public class CotipDetails {
 
     @Column(name = "ubicacion")
     private CotipLocation location;
-
-    @Column(name = "horarios")
-    private CotipSchedule schedule;
 
     @Column(name = "sitio_web")
     private String website;
