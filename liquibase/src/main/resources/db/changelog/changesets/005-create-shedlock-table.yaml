@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005-create-shedlock-table
+      author: cotip
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/005_create_shedlock_table.sql
+            relativeToChangelogFile: false
+            splitStatements: true

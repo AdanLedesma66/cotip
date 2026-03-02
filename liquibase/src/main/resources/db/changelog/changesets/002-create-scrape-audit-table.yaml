@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 002-create-scrape-audit-table
+      author: cotip
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/002_create_scrape_audit_table.sql
+            relativeToChangelogFile: false
+            splitStatements: true

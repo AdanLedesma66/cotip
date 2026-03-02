@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: ${COTIP_DB_URL:jdbc:postgresql://localhost:5432/cotip}
+    username: ${COTIP_DB_USER:cotip}
+    password: ${COTIP_DB_PASSWORD:cotip}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  liquibase:
+    enabled: true

@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-add-branch-office-column
+      author: cotip
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/003_add_branch_office_column.sql
+            relativeToChangelogFile: false
+            splitStatements: true

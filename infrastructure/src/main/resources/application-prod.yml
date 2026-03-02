@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: ${COTIP_DB_URL}
+    username: ${COTIP_DB_USER}
+    password: ${COTIP_DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  liquibase:
+    enabled: true
+
+management:
+  endpoint:
+    health:
+      show-details: never

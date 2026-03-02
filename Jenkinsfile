@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        jdk 'OpenJDK17'
+        jdk 'OpenJDK25'
     }
 
     stages {
@@ -17,7 +17,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building the project"
-                bat 'mvn clean install'
+                bat 'mvn -pl infrastructure -am clean install'
             }
         }
 

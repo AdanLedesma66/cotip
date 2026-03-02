@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004-create-branch-office-and-fk
+      author: cotip
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/004_create_branch_office_and_fk.sql
+            relativeToChangelogFile: false
+            splitStatements: true

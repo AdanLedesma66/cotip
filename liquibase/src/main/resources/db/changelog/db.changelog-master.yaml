@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changesets/001-create-exchange-rate-tables.yaml
+  - include:
+      file: db/changelog/changesets/002-create-scrape-audit-table.yaml
+  - include:
+      file: db/changelog/changesets/003-add-branch-office-column.yaml
+  - include:
+      file: db/changelog/changesets/004-create-branch-office-and-fk.yaml
+  - include:
+      file: db/changelog/changesets/005-create-shedlock-table.yaml
