@@ -1,0 +1,95 @@
+spring:
+  application:
+    name: cotip
+  profiles:
+    default: local
+  config:
+    import: optional:classpath:cotipdetails.properties
+  datasource:
+    url: ${COTIP_DB_URL:jdbc:postgresql://localhost:5432/cotip}
+    username: ${COTIP_DB_USER:postgres}
+    password: ${COTIP_DB_PASSWORD:123456}
+    driver-class-name: ${COTIP_DB_DRIVER:org.postgresql.Driver}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+  liquibase:
+    enabled: true
+  threads:
+    virtual:
+      enabled: true
+
+management:
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+
+info:
+  app:
+    name: Cotip
+    description: API centralizada de tasas de cambio de Paraguay
+    version: 0.0.1-SNAPSHOT
+
+cotip:
+  api:
+    version: ${COTIP_API_VERSION:v1}
+    base-path: ${COTIP_API_BASE_PATH:/cotip/${cotip.api.version}}
+  health:
+    max-freshness-minutes: ${COTIP_HEALTH_MAX_FRESHNESS_MINUTES:480}
+  http:
+    connect-timeout-seconds: ${COTIP_HTTP_CONNECT_TIMEOUT_SECONDS:5}
+    read-timeout-seconds: ${COTIP_HTTP_READ_TIMEOUT_SECONDS:12}
+  continental:
+    bank:
+      bearer:
+        path: ${COTIP_CONTINENTAL_BEARER_PATH:https://apibanking-gw.bancontinental.com.py/autenticarServicio/v1/realms/interno}
+        apikey: ${COTIP_CONTINENTAL_BEARER_API_KEY:3c35bb9e5fa948adb8d64c123d9d1a45}
+        client: ${COTIP_CONTINENTAL_BEARER_CLIENT:006f7995-3d33-4afe-8c56-e3b47377092c}
+        client-id: ${COTIP_CONTINENTAL_BEARER_CLIENT_ID:webinstitucional}
+        grant-Type: ${COTIP_CONTINENTAL_BEARER_GRANT_TYPE:client_credentials}
+        scope: ${COTIP_CONTINENTAL_BEARER_SCOPE:profile}
+      path: ${COTIP_CONTINENTAL_PATH:https://apibanking-gw.bancontinental.com.py/divisas/v1/api/monedas/cotizaciones}
+      apikey: ${COTIP_CONTINENTAL_API_KEY:3c35bb9e5fa948adb8d64c123d9d1a45}
+  familiar:
+    bank:
+      path: ${COTIP_FAMILIAR_PATH:https://www.familiar.com.py/}
+  gnb:
+    bank:
+      path: ${COTIP_GNB_PATH:https://www.bancognb.com.py/public/currency_quotations}
+  rio:
+    bank:
+      path: ${COTIP_RIO_PATH:https://www.rio.com.py/endpoint/cotizaciones}
+  solar:
+    bank:
+      path: ${COTIP_SOLAR_PATH:https://www.solar.com.py/}
+  bnf:
+    bank:
+      path: ${COTIP_BNF_PATH:https://www.bnf.gov.py/tarifario-2024-}
+  atlas:
+    bank:
+      path: ${COTIP_ATLAS_PATH:https://www.bancoatlas.com.py/web}
+  fic:
+    financial:
+      path: ${COTIP_FIC_PATH:https://fic.com.py/}
+  maxicambios:
+    path: ${COTIP_MAXICAMBIOS_PATH:https://www.maxicambios.com.py/}
+  chaco:
+    base-url: ${COTIP_CHACO_BASE_URL:${COTIP_CHACO_EXCHANGE_PATH:https://www.cambioschaco.com.py/api}}
+    default-branch-office-id: ${COTIP_CHACO_DEFAULT_BRANCH_OFFICE_ID:3}
+
+logging:
+  level:
+    org.springframework.boot.context.properties: INFO

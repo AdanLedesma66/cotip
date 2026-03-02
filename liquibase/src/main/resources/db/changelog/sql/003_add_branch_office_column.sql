@@ -1,0 +1,2 @@
+ALTER TABLE cotip_entity
+    ADD COLUMN IF NOT EXISTS sucursal VARCHAR(200);
