@@ -1,7 +1,6 @@
 package py.com.cotip.insfrastructure.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import py.com.cotip.application.dto.BranchOfficeDto;
 import py.com.cotip.application.dto.ExchangeRateDto;
@@ -16,8 +15,10 @@ import py.com.cotip.domain.port.in.request.GetRatesQuery;
 
 import java.util.List;
 
+import static py.com.cotip.insfrastructure.config.CotipConstants.VERSION_V1;
+
 @RestController
-@RequestMapping("${cotip.api.base-path:/cotip/v1}")
+@RequestMapping("/cotip")
 public class ExchangeRateApi {
 
     // ::: API
@@ -25,22 +26,19 @@ public class ExchangeRateApi {
     @Autowired
     private GetExchangeRatesUseCase action;
 
-    @Value("${cotip.api.version:v1}")
-    private String apiVersion;
-
     // ::: REQUEST
 
-    @GetMapping("/banco-continental")
+    @GetMapping(path = "/banco-continental", version = VERSION_V1)
     public CotipResponse<List<ExchangeRateDto>> continentalBank() {
         return CotipResponse.of(ExchangeRateDtoMapper.toDtoList(action.findLatestContinentalBankExchangeRates()));
     }
 
-    @GetMapping("/banco-gnb")
+    @GetMapping(path = "/banco-gnb", version = VERSION_V1)
     public CotipResponse<List<ExchangeRateDto>> gnbBank() {
         return CotipResponse.of(ExchangeRateDtoMapper.toDtoList(action.findLatestGnbBankExchangeRates()));
     }
 
-    @GetMapping("/maxi-cambios")
+    @GetMapping(path = "/maxi-cambios", version = VERSION_V1)
     public CotipResponse<List<ExchangeRateDto>> maxiExchange(
             @RequestParam(required = false) CotipCity city
     ){
@@ -51,23 +49,23 @@ public class ExchangeRateApi {
         return CotipResponse.of(ExchangeRateDtoMapper.toDtoList(action.findLatestMaxiExchangeRates(request)));
     }
 
-    @GetMapping("/cambios-chaco")
+    @GetMapping(path = "/cambios-chaco", version = VERSION_V1)
     public CotipResponse<List<ExchangeRateDto>> cambiosChaco() {
         return CotipResponse.of(ExchangeRateDtoMapper.toDtoList(action.findLatestCambiosChacoExchangeRates()));
     }
 
-    @GetMapping("/version")
+    @GetMapping(path = "/version", version = VERSION_V1)
     public CotipResponse<String> apiVersion() {
-        return CotipResponse.of(apiVersion);
+        return CotipResponse.of(VERSION_V1);
     }
 
-    @GetMapping("/cambios-chaco/sucursal/{branchOfficeId}")
+    @GetMapping(path = "/cambios-chaco/sucursal/{branchOfficeId}", version = VERSION_V1)
     public CotipResponse<List<ExchangeRateDto>> cambiosChacoByBranch(@PathVariable String branchOfficeId) {
         return CotipResponse.of(ExchangeRateDtoMapper.toDtoList(
                 action.findLatestCambiosChacoExchangeRates(branchOfficeId)));
     }
 
-    @GetMapping("/cambios-chaco/sucursal")
+    @GetMapping(path = "/cambios-chaco/sucursal", version = VERSION_V1)
     public CotipResponse<List<ExchangeRateDto>> cambiosChacoByBranchLookup(
             @RequestParam(required = false) String id,
             @RequestParam(required = false) String nombre
@@ -77,7 +75,7 @@ public class ExchangeRateApi {
                 action.findLatestCambiosChacoExchangeRates(branchOfficeId)));
     }
 
-    @GetMapping("/cambios-chaco/sucursales")
+    @GetMapping(path = "/cambios-chaco/sucursales", version = VERSION_V1)
     public CotipResponse<List<BranchOfficeDto>> cambiosChacoBranches() {
         List<BranchOfficeDto> branches = ChacoBranchCatalog.knownBranches().stream()
                 .map(branch -> new BranchOfficeDto(
