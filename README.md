@@ -95,7 +95,7 @@ Timeouts HTTP para scrapers:
 - Master changelog: `liquibase/src/main/resources/db/changelog/db.changelog-master.yaml`
 - Cambios por archivo yaml: `liquibase/src/main/resources/db/changelog/changesets/`
 
-Tabla de clientes API key: `api_client` (changeset `006-create-api-client-table`).
+Tabla de clientes API key: `api_client` (changeset `004-create-api-client-table`).
 Registrar cada cliente con su `api_key_hash` (SHA-256 en hexadecimal) y su limite `requests_per_minute`.
 Ejemplo de hash en Linux/macOS: `echo -n 'mi-api-key' | sha256sum`.
 

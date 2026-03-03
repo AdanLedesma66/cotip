@@ -14,6 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component("providerFreshness")
 public class ProviderFreshnessHealthIndicator implements HealthIndicator {
@@ -36,19 +37,15 @@ public class ProviderFreshnessHealthIndicator implements HealthIndicator {
                 ProviderType.GNB_BANK,
                 ProviderType.MAXI_CAMBIOS,
                 ProviderType.CAMBIOS_CHACO)) {
-            List<CotipEntity> latestRates = cotipRepository.findLatestCotizacionesByProvider(provider);
+            Optional<CotipEntity> latestRate = cotipRepository.findTopByProviderOrderByUpdatedAtDesc(provider);
 
-            if (latestRates.isEmpty()) {
+            if (latestRate.isEmpty()) {
                 allHealthy = false;
                 details.put(provider.name(), "NO_DATA");
                 continue;
             }
 
-            OffsetDateTime latestUpdate = latestRates.stream()
-                    .map(CotipEntity::getUploadDate)
-                    .filter(java.util.Objects::nonNull)
-                    .max(OffsetDateTime::compareTo)
-                    .orElse(null);
+            OffsetDateTime latestUpdate = latestRate.map(CotipEntity::getUpdatedAt).orElse(null);
 
             if (latestUpdate == null) {
                 allHealthy = false;

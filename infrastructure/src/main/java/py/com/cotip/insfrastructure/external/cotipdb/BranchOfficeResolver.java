@@ -8,7 +8,6 @@ import py.com.cotip.insfrastructure.external.webservice.config.ChacoBranchCatalo
 
 import java.util.Locale;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 public class BranchOfficeResolver {
@@ -32,7 +31,6 @@ public class BranchOfficeResolver {
 
         BranchOfficeEntity branchOffice = findExisting(providerType, normalizedName, normalizedExternalId)
                 .orElseGet(() -> BranchOfficeEntity.builder()
-                        .id(UUID.randomUUID())
                         .provider(providerType)
                         .build());
 
@@ -53,14 +51,14 @@ public class BranchOfficeResolver {
                                                       String externalBranchId) {
         if (externalBranchId != null) {
             Optional<BranchOfficeEntity> byExternal = branchOfficeRepository
-                    .findByProviderAndExternalBranchId(providerType, externalBranchId);
+                    .findByProviderAndExternalBranchIdAndEnabledTrue(providerType, externalBranchId);
             if (byExternal.isPresent()) {
                 return byExternal;
             }
         }
 
         if (branchOfficeName != null) {
-            return branchOfficeRepository.findByProviderAndName(providerType, branchOfficeName);
+            return branchOfficeRepository.findByProviderAndNameIgnoreCaseAndEnabledTrue(providerType, branchOfficeName);
         }
 
         return Optional.empty();

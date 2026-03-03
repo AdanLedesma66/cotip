@@ -32,7 +32,7 @@ public class ExchangeRateRepositoryAdapter implements ExchangeRateRepositoryPort
 
         cotipEntities.forEach(cotipEntity -> {
 
-            Optional<CotipEntity> lastCotipEntity = cotipRepository.findTopByExchangeRateAndProviderAndBranchOfficeOrderByUploadDateDesc(
+            Optional<CotipEntity> lastCotipEntity = cotipRepository.findTopByExchangeRateAndProviderAndBranchOfficeOrderByUpdatedAtDesc(
                     cotipEntity.getExchangeRate(), providerType, cotipEntity.getBranchOffice());
 
             cotipEntity.setId(UUID.randomUUID());
@@ -54,15 +54,17 @@ public class ExchangeRateRepositoryAdapter implements ExchangeRateRepositoryPort
     }
 
     @Override
-    public List<ExchangeRateBO> findAllByProviderOrderByUploadDate(ProviderType providerType) {
-        return cotipRepository.findLatestCotizacionesByProvider(providerType).stream().map(this::toDomain).toList();
+    public List<ExchangeRateBO> findAllByProviderOrderByUpdatedAt(ProviderType providerType) {
+        return cotipRepository.findAllByProviderOrderByUpdatedAtDesc(providerType).stream().map(this::toDomain).toList();
     }
 
     @Override
-    public List<ExchangeRateBO> findAllByProviderAndBranchOfficeExternalIdOrderByUploadDate(ProviderType providerType,
-                                                                                              String branchOfficeExternalId) {
-        return cotipRepository.findLatestCotizacionesByProviderAndBranchOfficeExternalId(providerType,
-                        branchOfficeExternalId)
+    public List<ExchangeRateBO> findAllByProviderAndBranchOfficeExternalIdOrderByUpdatedAt(ProviderType providerType,
+                                                                                             String branchOfficeExternalId) {
+        return cotipRepository.findAllByProviderAndBranchOfficeRef_ExternalBranchIdOrderByUpdatedAtDesc(
+                        providerType,
+                        branchOfficeExternalId
+                )
                 .stream()
                 .map(this::toDomain)
                 .toList();
@@ -123,7 +125,7 @@ public class ExchangeRateRepositoryAdapter implements ExchangeRateRepositoryPort
                 .branchOffice(branchOfficeName)
                 .branchOfficeExternalId(branchOfficeExternalId)
                 .city(city)
-                .lastUpdated(source.getUploadDate())
+                .lastUpdated(source.getUpdatedAt())
                 .build();
     }
 

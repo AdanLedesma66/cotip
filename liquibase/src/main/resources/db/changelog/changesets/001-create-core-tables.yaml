@@ -1,9 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 001-create-exchange-rate-tables
+      id: 001-create-core-tables
       author: cotip
       changes:
         - sqlFile:
-            path: db/changelog/sql/001_create_exchange_rate_tables.sql
+            path: db/changelog/sql/001_create_core_tables.sql
             relativeToChangelogFile: false
             splitStatements: true

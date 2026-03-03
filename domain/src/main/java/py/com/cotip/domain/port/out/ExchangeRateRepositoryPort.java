@@ -10,9 +10,9 @@ public interface ExchangeRateRepositoryPort {
 
     List<ExchangeRateBO> saveAllExchangeRates(List<ExchangeRateBO> exchangeRates, ProviderType providerType);
 
-    List<ExchangeRateBO> findAllByProviderOrderByUploadDate(ProviderType providerType);
+    List<ExchangeRateBO> findAllByProviderOrderByUpdatedAt(ProviderType providerType);
 
-    List<ExchangeRateBO> findAllByProviderAndBranchOfficeExternalIdOrderByUploadDate(ProviderType providerType,
-                                                                                      String branchOfficeExternalId);
+    List<ExchangeRateBO> findAllByProviderAndBranchOfficeExternalIdOrderByUpdatedAt(ProviderType providerType,
+                                                                                     String branchOfficeExternalId);
 
 }
