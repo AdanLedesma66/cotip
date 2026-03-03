@@ -4,6 +4,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import py.com.cotip.application.service.GetExchangeRatesUseCaseImpl;
+import py.com.cotip.domain.model.BranchOfficeBO;
 import py.com.cotip.domain.model.ExchangeRateBO;
 import py.com.cotip.domain.port.in.GetExchangeRatesUseCase;
 import py.com.cotip.domain.port.in.request.GetRatesQuery;
@@ -48,5 +49,17 @@ public class CachedGetExchangeRatesUseCase implements GetExchangeRatesUseCase {
     @Cacheable(value = "chaco-exchange", key = "'chacoResponse:' + #branchOfficeId")
     public List<ExchangeRateBO> findLatestCambiosChacoExchangeRates(String branchOfficeId) {
         return delegate.findLatestCambiosChacoExchangeRates(branchOfficeId);
+    }
+
+    @Override
+    @Cacheable(value = "chaco-exchange", key = "'chacoResponse:name:' + #branchOfficeName")
+    public List<ExchangeRateBO> findLatestCambiosChacoExchangeRatesByBranchName(String branchOfficeName) {
+        return delegate.findLatestCambiosChacoExchangeRatesByBranchName(branchOfficeName);
+    }
+
+    @Override
+    @Cacheable(value = "chaco-branches", key = "'chacoBranches'" )
+    public List<BranchOfficeBO> findCambiosChacoBranches() {
+        return delegate.findCambiosChacoBranches();
     }
 }

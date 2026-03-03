@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 006-create-api-client-table
+      author: cotip
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/006_create_api_client_table.sql
+            relativeToChangelogFile: false
+            splitStatements: true
