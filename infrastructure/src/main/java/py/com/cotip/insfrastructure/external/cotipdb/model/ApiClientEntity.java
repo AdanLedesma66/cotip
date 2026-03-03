@@ -2,18 +2,14 @@ package py.com.cotip.insfrastructure.external.cotipdb.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import py.com.cotip.insfrastructure.external.cotipdb.config.CotipBaseEntity;
 
 @Getter
 @Setter
@@ -22,10 +18,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity
 @Table(name = "api_client")
-public class ApiClientEntity {
-
-    @Id
-    private UUID id;
+public class ApiClientEntity extends CotipBaseEntity {
 
     @Column(name = "client_name", nullable = false, length = 120, unique = true)
     private String clientName;
@@ -33,35 +26,13 @@ public class ApiClientEntity {
     @Column(name = "api_key_hash", nullable = false, length = 128, unique = true)
     private String apiKeyHash;
 
-    @Column(name = "enabled", nullable = false)
-    private boolean enabled;
-
     @Column(name = "requests_per_minute", nullable = false)
     private Integer requestsPerMinute;
 
-    @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
-
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
-
     @PrePersist
-    public void onCreate() {
-        if (this.id == null) {
-            this.id = UUID.randomUUID();
-        }
-
-        OffsetDateTime now = OffsetDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
-
+    public void applyClientDefaults() {
         if (this.requestsPerMinute == null || this.requestsPerMinute <= 0) {
             this.requestsPerMinute = 120;
         }
-    }
-
-    @PreUpdate
-    public void onUpdate() {
-        this.updatedAt = OffsetDateTime.now();
     }
 }

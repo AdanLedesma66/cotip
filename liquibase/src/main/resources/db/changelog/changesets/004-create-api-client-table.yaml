@@ -1,9 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 004-create-branch-office-and-fk
+      id: 004-create-api-client-table
       author: cotip
       changes:
         - sqlFile:
-            path: db/changelog/sql/004_create_branch_office_and_fk.sql
+            path: db/changelog/sql/004_create_api_client_table.sql
             relativeToChangelogFile: false
             splitStatements: true

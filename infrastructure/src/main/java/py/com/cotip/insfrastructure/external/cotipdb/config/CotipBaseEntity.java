@@ -1,10 +1,14 @@
 package py.com.cotip.insfrastructure.external.cotipdb.config;
 
-import jakarta.persistence.*;
-import lombok.*;
-import py.com.cotip.domain.commons.ProviderType;
-import py.com.cotip.insfrastructure.external.cotipdb.model.BranchOfficeEntity;
-import py.com.cotip.insfrastructure.external.cotipdb.util.ProviderTypeConverter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Id;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -17,35 +21,36 @@ import java.util.UUID;
 @NoArgsConstructor
 public class CotipBaseEntity implements Serializable {
 
-    // ::: vars
-
     @Id
     private UUID id;
 
-    @Column(name = "habilitado")
-    private boolean enabled;
+    @Column(name = "enabled", nullable = false)
+    private boolean enabled = true;
 
-    @Convert(converter = ProviderTypeConverter.class)
-    @Column(name = "proveedor")
-    private ProviderType provider;
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
 
-    @Column(name = "ciudad")
-    private String city;
-
-    @Column(name = "sucursal")
-    private String branchOffice;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "branch_office_id")
-    private BranchOfficeEntity branchOfficeRef;
-
-    @Column(name = "fecha_carga")
-    private OffsetDateTime uploadDate;
+    @Column(name = "updated_at", nullable = false)
+    private OffsetDateTime updatedAt;
 
     @PrePersist
+    public void onCreate() {
+        OffsetDateTime now = OffsetDateTime.now();
+
+        if (this.id == null) {
+            this.id = UUID.randomUUID();
+        }
+
+        if (this.createdAt == null) {
+            this.createdAt = now;
+        }
+
+        this.updatedAt = now;
+    }
+
     @PreUpdate
-    public void updateTimestamp() {
-        this.uploadDate = OffsetDateTime.now();
+    public void onUpdate() {
+        this.updatedAt = OffsetDateTime.now();
     }
 
 }

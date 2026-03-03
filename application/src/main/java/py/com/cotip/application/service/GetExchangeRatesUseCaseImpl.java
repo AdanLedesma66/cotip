@@ -18,7 +18,12 @@ import py.com.cotip.domain.port.out.response.ContinentalBankResponse;
 import py.com.cotip.domain.port.out.response.GnbBankResponse;
 import py.com.cotip.domain.port.out.response.MaxiExchangeResponse;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
 
 public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
 
@@ -52,8 +57,9 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                 ProviderType.CONTINENTAL_BANK);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        List<ExchangeRateBO> result = exchangeRateRepositoryPort.findAllByProviderOrderByUploadDate(
+        List<ExchangeRateBO> storedRates = exchangeRateRepositoryPort.findAllByProviderOrderByUpdatedAt(
                 ProviderType.CONTINENTAL_BANK);
+        List<ExchangeRateBO> result = latestByExchangeRateAndBranch(storedRates);
         metricsPort.recordFreshness(ProviderType.CONTINENTAL_BANK, result);
         return result;
     }
@@ -65,8 +71,9 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                 ProviderType.GNB_BANK);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        List<ExchangeRateBO> result = exchangeRateRepositoryPort.findAllByProviderOrderByUploadDate(
+        List<ExchangeRateBO> storedRates = exchangeRateRepositoryPort.findAllByProviderOrderByUpdatedAt(
                 ProviderType.GNB_BANK);
+        List<ExchangeRateBO> result = latestByExchangeRateAndBranch(storedRates);
         metricsPort.recordFreshness(ProviderType.GNB_BANK, result);
         return result;
     }
@@ -78,8 +85,9 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                 ProviderType.MAXI_CAMBIOS);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        List<ExchangeRateBO> result = exchangeRateRepositoryPort.findAllByProviderOrderByUploadDate(
+        List<ExchangeRateBO> storedRates = exchangeRateRepositoryPort.findAllByProviderOrderByUpdatedAt(
                 ProviderType.MAXI_CAMBIOS);
+        List<ExchangeRateBO> result = latestByExchangeRateAndBranch(storedRates);
         metricsPort.recordFreshness(ProviderType.MAXI_CAMBIOS, result);
         return result;
     }
@@ -99,7 +107,7 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
         String extractedBranchOfficeId = extractBranchOfficeId(chacoRates);
 
         return saveAndGetChacoRates(chacoRates,
-                extractedBranchOfficeId);
+                extractedBranchOfficeId != null ? extractedBranchOfficeId : resolvedBranchOfficeId);
     }
 
     @Override
@@ -109,7 +117,7 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
         String extractedBranchOfficeId = extractBranchOfficeId(chacoRates);
 
         return saveAndGetChacoRates(chacoRates,
-                extractedBranchOfficeId);
+                extractedBranchOfficeId != null ? extractedBranchOfficeId : resolvedBranchOfficeId);
     }
 
     @Override
@@ -122,9 +130,10 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
         saveAllCotipEntities(fromChaco(chacoRates), ProviderType.CAMBIOS_CHACO);
 
         log.info("Obtenemos la ultima cotizacion guardada");
-        List<ExchangeRateBO> result = exchangeRateRepositoryPort
-                .findAllByProviderAndBranchOfficeExternalIdOrderByUploadDate(ProviderType.CAMBIOS_CHACO,
+        List<ExchangeRateBO> storedRates = exchangeRateRepositoryPort
+                .findAllByProviderAndBranchOfficeExternalIdOrderByUpdatedAt(ProviderType.CAMBIOS_CHACO,
                         branchOfficeId);
+        List<ExchangeRateBO> result = latestByExchangeRate(storedRates);
         metricsPort.recordFreshness(ProviderType.CAMBIOS_CHACO, result);
         return result;
     }
@@ -208,5 +217,31 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                         CotipError.CAMBIOS_CHACO_BRANCH_INVALID.getCode(),
                         "No existe sucursal con nombre: " + normalizedName,
                         true));
+    }
+
+    private List<ExchangeRateBO> latestByExchangeRateAndBranch(List<ExchangeRateBO> rates) {
+        return latestByKey(rates, rate -> normalize(rate.getExchangeRate()) + "|" + normalize(rate.getBranchOffice()));
+    }
+
+    private List<ExchangeRateBO> latestByExchangeRate(List<ExchangeRateBO> rates) {
+        return latestByKey(rates, rate -> normalize(rate.getExchangeRate()));
+    }
+
+    private List<ExchangeRateBO> latestByKey(List<ExchangeRateBO> rates, Function<ExchangeRateBO, String> keyBuilder) {
+        Map<String, ExchangeRateBO> latestByKey = new LinkedHashMap<>();
+        for (ExchangeRateBO rate : rates) {
+            String key = keyBuilder.apply(rate);
+            latestByKey.putIfAbsent(key, rate);
+        }
+
+        return new ArrayList<>(latestByKey.values());
+    }
+
+    private String normalize(String value) {
+        if (value == null) {
+            return "";
+        }
+
+        return value.trim().toLowerCase(Locale.ROOT);
     }
 }

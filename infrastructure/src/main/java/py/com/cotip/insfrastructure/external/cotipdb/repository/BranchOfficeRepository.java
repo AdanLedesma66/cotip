@@ -14,9 +14,16 @@ public interface BranchOfficeRepository extends JpaRepository<BranchOfficeEntity
 
     Optional<BranchOfficeEntity> findByProviderAndExternalBranchId(ProviderType provider, String externalBranchId);
 
+    Optional<BranchOfficeEntity> findByProviderAndExternalBranchIdAndEnabledTrue(ProviderType provider,
+                                                                                  String externalBranchId);
+
     Optional<BranchOfficeEntity> findByProviderAndName(ProviderType provider, String name);
 
     Optional<BranchOfficeEntity> findByProviderAndNameIgnoreCase(ProviderType provider, String name);
 
+    Optional<BranchOfficeEntity> findByProviderAndNameIgnoreCaseAndEnabledTrue(ProviderType provider, String name);
+
     List<BranchOfficeEntity> findByProviderOrderByNameAsc(ProviderType provider);
+
+    List<BranchOfficeEntity> findByProviderAndEnabledTrueOrderByNameAsc(ProviderType provider);
 }

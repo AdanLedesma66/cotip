@@ -31,7 +31,7 @@ public class GenericProviderStrategy implements CotipSaveStrategy {
             cotipEntity.setProvider(providerType);
 
             Optional<CotipEntity> lastCotipEntity = cotipRepository
-                    .findTopByExchangeRateAndProviderAndBranchOfficeOrderByUploadDateDesc(
+                    .findTopByExchangeRateAndProviderAndBranchOfficeOrderByUpdatedAtDesc(
                             cotipEntity.getExchangeRate(), providerType, cotipEntity.getBranchOffice());
 
             if (lastCotipEntity.isPresent()) {

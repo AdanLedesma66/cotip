@@ -1,9 +1,21 @@
 package py.com.cotip.insfrastructure.external.cotipdb.model;
 
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import py.com.cotip.domain.commons.ProviderType;
 import py.com.cotip.domain.commons.RateChange;
 import py.com.cotip.insfrastructure.external.cotipdb.config.CotipBaseEntity;
+import py.com.cotip.insfrastructure.external.cotipdb.util.ProviderTypeConverter;
 import py.com.cotip.insfrastructure.external.cotipdb.util.RateChangeConverter;
 
 @EqualsAndHashCode(callSuper = true)
@@ -15,27 +27,38 @@ import py.com.cotip.insfrastructure.external.cotipdb.util.RateChangeConverter;
 @Entity
 public class CotipEntity extends CotipBaseEntity {
 
-    // ::: vars
+    @Convert(converter = ProviderTypeConverter.class)
+    @Column(name = "provider")
+    private ProviderType provider;
 
-    @Column(name = "tipo_cambio")
+    @Column(name = "city")
+    private String city;
+
+    @Column(name = "branch_office")
+    private String branchOffice;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "branch_office_id")
+    private BranchOfficeEntity branchOfficeRef;
+
+    @Column(name = "exchange_rate")
     private String exchangeRate;
 
-    @Column(name = "codigo_moneda")
+    @Column(name = "currency_code")
     private String currencyCode;
 
-    @Column(name = "tasa_compra")
+    @Column(name = "buy_rate")
     private Long buyRate;
 
-    @Column(name = "tasa_venta")
+    @Column(name = "sell_rate")
     private Long sellRate;
 
     @Convert(converter = RateChangeConverter.class)
-    @Column(name = "estado_compra")
+    @Column(name = "buy_rate_status")
     private RateChange buyRateStatus;
 
     @Convert(converter = RateChangeConverter.class)
-    @Column(name = "estado_venta")
+    @Column(name = "sell_rate_status")
     private RateChange sellRateStatus;
-
 
 }

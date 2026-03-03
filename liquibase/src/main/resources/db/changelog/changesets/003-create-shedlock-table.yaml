@@ -1,9 +1,9 @@
 databaseChangeLog:
   - changeSet:
-      id: 006-create-api-client-table
+      id: 003-create-shedlock-table
       author: cotip
       changes:
         - sqlFile:
-            path: db/changelog/sql/006_create_api_client_table.sql
+            path: db/changelog/sql/003_create_shedlock_table.sql
             relativeToChangelogFile: false
             splitStatements: true

@@ -17,19 +17,25 @@ public class BranchOfficeQueryDbOutPortImpl implements BranchOfficeQueryPort {
 
     @Override
     public Optional<BranchOfficeBO> findCambiosChacoByExternalBranchId(String externalBranchId) {
-        return branchOfficeRepository.findByProviderAndExternalBranchId(ProviderType.CAMBIOS_CHACO, externalBranchId)
+        return branchOfficeRepository.findByProviderAndExternalBranchIdAndEnabledTrue(
+                        ProviderType.CAMBIOS_CHACO,
+                        externalBranchId
+                )
                 .map(this::toBo);
     }
 
     @Override
     public Optional<BranchOfficeBO> findCambiosChacoByName(String branchOfficeName) {
-        return branchOfficeRepository.findByProviderAndNameIgnoreCase(ProviderType.CAMBIOS_CHACO, branchOfficeName)
+        return branchOfficeRepository.findByProviderAndNameIgnoreCaseAndEnabledTrue(
+                        ProviderType.CAMBIOS_CHACO,
+                        branchOfficeName
+                )
                 .map(this::toBo);
     }
 
     @Override
     public List<BranchOfficeBO> findAllCambiosChacoBranches() {
-        return branchOfficeRepository.findByProviderOrderByNameAsc(ProviderType.CAMBIOS_CHACO)
+        return branchOfficeRepository.findByProviderAndEnabledTrueOrderByNameAsc(ProviderType.CAMBIOS_CHACO)
                 .stream()
                 .map(this::toBo)
                 .toList();
