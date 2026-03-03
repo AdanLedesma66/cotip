@@ -66,17 +66,25 @@ public class GnbScraper extends AbstractProviderScraper<GnbBankResponse, Listado
 
     @Override
     protected List<GnbBankResponse> normalize(ListadoGbnExternal parsedPayload) {
-        return parsedPayload.getExchangeRates().stream().map(cotizacion -> {
-            String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(cotizacion.getCurrencyDesc());
-            String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(standardizedExchangeRate));
+        return parsedPayload.getExchangeRates().stream()
+                .map(cotizacion -> {
+                    CurrencyUtils.StandardizedRate standardizedRate = CurrencyUtils
+                            .standardizeExchangeRate(cotizacion.getCurrencyDesc());
+                    if (standardizedRate == null) {
+                        return null;
+                    }
 
-            return GnbBankResponse.builder()
-                    .exchangeRate(standardizedExchangeRate)
-                    .currencyCode(standardizedCurrencyCode)
-                    .buyRate(stringToLong(cotizacion.getElectronicBuyPrice()))
-                    .sellRate(stringToLong(cotizacion.getElectronicSellPrice()))
-                    .build();
-        }).toList();
+                    return GnbBankResponse.builder()
+                            .exchangeRate(standardizedRate.exchangeRateName())
+                            .currencyCode(standardizedRate.currencyCode())
+                            .currencyName(standardizedRate.currencyName())
+                            .quoteModality(standardizedRate.quoteModality())
+                            .buyRate(stringToLong(cotizacion.getElectronicBuyPrice()))
+                            .sellRate(stringToLong(cotizacion.getElectronicSellPrice()))
+                            .build();
+                })
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     @Override

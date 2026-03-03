@@ -3,6 +3,7 @@ package py.com.cotip.insfrastructure.external.cotipdb;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import py.com.cotip.domain.commons.ProviderType;
+import py.com.cotip.domain.commons.QuoteModality;
 import py.com.cotip.domain.commons.RateChange;
 import py.com.cotip.domain.model.ExchangeRateBO;
 import py.com.cotip.domain.port.out.ExchangeRateRepositoryPort;
@@ -32,8 +33,12 @@ public class ExchangeRateRepositoryAdapter implements ExchangeRateRepositoryPort
 
         cotipEntities.forEach(cotipEntity -> {
 
-            Optional<CotipEntity> lastCotipEntity = cotipRepository.findTopByExchangeRateAndProviderAndBranchOfficeOrderByUpdatedAtDesc(
-                    cotipEntity.getExchangeRate(), providerType, cotipEntity.getBranchOffice());
+            Optional<CotipEntity> lastCotipEntity = cotipRepository
+                    .findTopByCurrencyCodeAndQuoteModalityAndProviderAndBranchOfficeOrderByUpdatedAtDesc(
+                    cotipEntity.getCurrencyCode(),
+                    quoteModality(cotipEntity.getQuoteModality()),
+                    providerType,
+                    cotipEntity.getBranchOffice());
 
             cotipEntity.setId(UUID.randomUUID());
             cotipEntity.setEnabled(true);
@@ -86,6 +91,8 @@ public class ExchangeRateRepositoryAdapter implements ExchangeRateRepositoryPort
         CotipEntity entity = new CotipEntity();
         entity.setExchangeRate(source.getExchangeRate());
         entity.setCurrencyCode(source.getCurrencyCode());
+        entity.setCurrencyName(source.getCurrencyName());
+        entity.setQuoteModality(quoteModality(source.getQuoteModality()));
         entity.setBuyRate(source.getBuyRate());
         entity.setSellRate(source.getSellRate());
         entity.setCity(source.getCity());
@@ -116,6 +123,8 @@ public class ExchangeRateRepositoryAdapter implements ExchangeRateRepositoryPort
         return ExchangeRateBO.builder()
                 .exchangeRate(source.getExchangeRate())
                 .currencyCode(source.getCurrencyCode())
+                .currencyName(source.getCurrencyName())
+                .quoteModality(quoteModality(source.getQuoteModality()))
                 .buyRate(source.getBuyRate())
                 .sellRate(source.getSellRate())
                 .buyRateStatus(source.getBuyRateStatus())
@@ -127,6 +136,10 @@ public class ExchangeRateRepositoryAdapter implements ExchangeRateRepositoryPort
                 .city(city)
                 .lastUpdated(source.getUpdatedAt())
                 .build();
+    }
+
+    private QuoteModality quoteModality(QuoteModality quoteModality) {
+        return quoteModality == null ? QuoteModality.CASH : quoteModality;
     }
 
 }

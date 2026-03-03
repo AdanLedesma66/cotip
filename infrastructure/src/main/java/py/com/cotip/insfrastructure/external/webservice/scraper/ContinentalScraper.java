@@ -91,16 +91,25 @@ public class ContinentalScraper extends AbstractProviderScraper<ContinentalBankR
 
     @Override
     protected List<ContinentalBankResponse> normalize(List<ContinentalExternal> parsedPayload) {
-        return parsedPayload.stream().map(cotizacion -> {
-            String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(cotizacion.getExchangeRate());
-            String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(Objects.requireNonNull(standardizedExchangeRate));
-            return ContinentalBankResponse.builder()
-                    .exchangeRate(standardizedExchangeRate)
-                    .currencyCode(standardizedCurrencyCode)
-                    .buyRate(cotizacion.getBuyRate().longValue())
-                    .sellRate(cotizacion.getSellRate().longValue())
-                    .build();
-        }).toList();
+        return parsedPayload.stream()
+                .map(cotizacion -> {
+                    CurrencyUtils.StandardizedRate standardizedRate = CurrencyUtils
+                            .standardizeExchangeRate(cotizacion.getExchangeRate());
+                    if (standardizedRate == null) {
+                        return null;
+                    }
+
+                    return ContinentalBankResponse.builder()
+                            .exchangeRate(standardizedRate.exchangeRateName())
+                            .currencyCode(standardizedRate.currencyCode())
+                            .currencyName(standardizedRate.currencyName())
+                            .quoteModality(standardizedRate.quoteModality())
+                            .buyRate(cotizacion.getBuyRate().longValue())
+                            .sellRate(cotizacion.getSellRate().longValue())
+                            .build();
+                })
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     @Override

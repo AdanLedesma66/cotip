@@ -1,6 +1,7 @@
 package py.com.cotip.application.dto;
 
 import py.com.cotip.domain.commons.ProviderType;
+import py.com.cotip.domain.commons.QuoteModality;
 import py.com.cotip.domain.commons.RateChange;
 
 import java.time.OffsetDateTime;
@@ -8,6 +9,8 @@ import java.time.OffsetDateTime;
 public record ExchangeRateDto(
         String exchangeRate,
         String currencyCode,
+        String currencyName,
+        QuoteModality quoteModality,
         Long buyRate,
         Long sellRate,
         RateChange buyRateStatus,

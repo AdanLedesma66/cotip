@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import py.com.cotip.domain.commons.ProviderType;
+import py.com.cotip.domain.commons.QuoteModality;
 import py.com.cotip.domain.commons.RateChange;
 
 import java.time.OffsetDateTime;
@@ -19,6 +20,8 @@ public class ExchangeRateBO {
 
     private String exchangeRate;
     private String currencyCode;
+    private String currencyName;
+    private QuoteModality quoteModality;
     private Long buyRate;
     private Long sellRate;
     private RateChange buyRateStatus;
