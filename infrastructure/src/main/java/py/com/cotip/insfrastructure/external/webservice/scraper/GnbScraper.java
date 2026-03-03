@@ -77,7 +77,6 @@ public class GnbScraper extends AbstractProviderScraper<GnbBankResponse, Listado
                     return GnbBankResponse.builder()
                             .exchangeRate(standardizedRate.exchangeRateName())
                             .currencyCode(standardizedRate.currencyCode())
-                            .currencyName(standardizedRate.currencyName())
                             .quoteModality(standardizedRate.quoteModality())
                             .buyRate(stringToLong(cotizacion.getElectronicBuyPrice()))
                             .sellRate(stringToLong(cotizacion.getElectronicSellPrice()))

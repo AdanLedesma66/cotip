@@ -29,7 +29,6 @@ CREATE TABLE IF NOT EXISTS cotip_entity (
     branch_office_id UUID,
     exchange_rate VARCHAR(200) NOT NULL,
     currency_code VARCHAR(10) NOT NULL,
-    currency_name VARCHAR(150) NOT NULL,
     quote_modality VARCHAR(30) NOT NULL,
     buy_rate BIGINT,
     sell_rate BIGINT,

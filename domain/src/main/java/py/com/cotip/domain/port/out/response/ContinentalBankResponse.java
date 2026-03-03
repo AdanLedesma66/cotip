@@ -12,7 +12,6 @@ public class ContinentalBankResponse {
 
     private String exchangeRate;
     private String currencyCode;
-    private String currencyName;
     private QuoteModality quoteModality;
     private Long buyRate;
     private Long sellRate;

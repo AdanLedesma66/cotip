@@ -91,7 +91,6 @@ public class ExchangeRateRepositoryAdapter implements ExchangeRateRepositoryPort
         CotipEntity entity = new CotipEntity();
         entity.setExchangeRate(source.getExchangeRate());
         entity.setCurrencyCode(source.getCurrencyCode());
-        entity.setCurrencyName(source.getCurrencyName());
         entity.setQuoteModality(quoteModality(source.getQuoteModality()));
         entity.setBuyRate(source.getBuyRate());
         entity.setSellRate(source.getSellRate());
@@ -123,7 +122,6 @@ public class ExchangeRateRepositoryAdapter implements ExchangeRateRepositoryPort
         return ExchangeRateBO.builder()
                 .exchangeRate(source.getExchangeRate())
                 .currencyCode(source.getCurrencyCode())
-                .currencyName(source.getCurrencyName())
                 .quoteModality(quoteModality(source.getQuoteModality()))
                 .buyRate(source.getBuyRate())
                 .sellRate(source.getSellRate())

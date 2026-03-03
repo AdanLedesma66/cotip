@@ -89,7 +89,6 @@ public class MaxiCambiosScraper extends AbstractProviderScraper<MaxiExchangeResp
                 rates.add(MaxiExchangeResponse.builder()
                         .exchangeRate(standardizedRate.exchangeRateName())
                         .currencyCode(standardizedRate.currencyCode())
-                        .currencyName(standardizedRate.currencyName())
                         .quoteModality(standardizedRate.quoteModality())
                         .buyRate(buyRate.longValue())
                         .sellRate(sellRate.longValue())

@@ -14,7 +14,6 @@ public final class ExchangeRateDtoMapper {
         return new ExchangeRateDto(
                 source.getExchangeRate(),
                 source.getCurrencyCode(),
-                source.getCurrencyName(),
                 source.getQuoteModality(),
                 source.getBuyRate(),
                 source.getSellRate(),

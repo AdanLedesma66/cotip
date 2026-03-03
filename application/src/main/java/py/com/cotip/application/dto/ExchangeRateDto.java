@@ -9,7 +9,6 @@ import java.time.OffsetDateTime;
 public record ExchangeRateDto(
         String exchangeRate,
         String currencyCode,
-        String currencyName,
         QuoteModality quoteModality,
         Long buyRate,
         Long sellRate,

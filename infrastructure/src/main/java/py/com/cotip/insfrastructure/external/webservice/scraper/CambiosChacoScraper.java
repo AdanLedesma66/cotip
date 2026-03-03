@@ -141,7 +141,6 @@ public class CambiosChacoScraper extends AbstractProviderScraper<ChacoExchangeRe
                     return ChacoExchangeResponse.builder()
                             .exchangeRate(standardizedRate.exchangeRateName())
                             .currencyCode(standardizedRate.currencyCode())
-                            .currencyName(standardizedRate.currencyName())
                             .quoteModality(standardizedRate.quoteModality())
                             .buyRate(toLong(item.getPurchasePrice()))
                             .sellRate(toLong(item.getSalePrice()))
