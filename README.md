@@ -63,7 +63,19 @@ Para Cambios Chaco se pueden configurar sucursales por ID con:
 Versionado de API:
 
 - `COTIP_API_VERSION` (default: `v1`)
-- `COTIP_API_BASE_PATH` (default: `/cotip/v1`)
+- `COTIP_API_BASE_PATH` (default: `/cotip`)
+
+Seguridad por API key:
+
+- `COTIP_API_KEY_HEADER` (default: `cotip-api-key`)
+- `COTIP_API_KEY_DEFAULT_RPM` (default: `120`)
+- `COTIP_API_KEY_ENABLED` (default: `true`)
+
+Para habilitar clientes, registrar API keys hasheadas en la tabla `api_client`.
+Las requests a `/cotip/**` requieren:
+
+- Header de version: `cotip-api-version`
+- Header de cliente: `cotip-api-key`
 
 Timeouts HTTP para scrapers:
 
@@ -82,6 +94,10 @@ Timeouts HTTP para scrapers:
 - Configuracion de host, base y esquema: `liquibase/liquibase-cotip.properties`
 - Master changelog: `liquibase/src/main/resources/db/changelog/db.changelog-master.yaml`
 - Cambios por archivo yaml: `liquibase/src/main/resources/db/changelog/changesets/`
+
+Tabla de clientes API key: `api_client` (changeset `006-create-api-client-table`).
+Registrar cada cliente con su `api_key_hash` (SHA-256 en hexadecimal) y su limite `requests_per_minute`.
+Ejemplo de hash en Linux/macOS: `echo -n 'mi-api-key' | sha256sum`.
 
 Ejecucion:
 
@@ -124,16 +140,21 @@ Con estructura multi-modulo, el arranque recomendado es desde `infrastructure`:
 ```
 Ejemplo de servicios:
 
-- `GET /cotip/v1/version`: version activa de API
-- `GET /cotip/v1/cambios-chaco`: cotizaciones de una sucursal por defecto (configurable)
-- `GET /cotip/v1/cambios-chaco/sucursal/{branchOfficeId}`: cotizaciones por id de sucursal
-- `GET /cotip/v1/cambios-chaco/sucursal?id=2`: busqueda por id via query param
-- `GET /cotip/v1/cambios-chaco/sucursal?nombre=Shopping Villa Morra - Asuncion`: busqueda por nombre de sucursal
-- `GET /cotip/v1/cambios-chaco/sucursales`: catalogo de sucursales disponibles
+- `GET /cotip/version`: version activa de API
+- `GET /cotip/cambios-chaco`: cotizaciones de una sucursal por defecto (configurable)
+- `GET /cotip/cambios-chaco/sucursal/{branchOfficeId}`: cotizaciones por id de sucursal
+- `GET /cotip/cambios-chaco/sucursal?id=2`: busqueda por id via query param
+- `GET /cotip/cambios-chaco/sucursal?nombre=Shopping Villa Morra - Asuncion`: busqueda por nombre de sucursal
+- `GET /cotip/cambios-chaco/sucursales`: catalogo de sucursales disponibles
 
-curl --location 'localhost:8080/cotip/v1/banco-continental'
+```bash
+curl --location 'http://localhost:8080/cotip/banco-continental' \
+  --header 'cotip-api-version: v1' \
+  --header 'cotip-api-key: <TU_API_KEY>'
+```
 Response:
 
+```json
 {
   "data": [
     {

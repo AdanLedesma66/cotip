@@ -46,7 +46,12 @@ info:
 cotip:
   api:
     version: ${COTIP_API_VERSION:v1}
-    base-path: ${COTIP_API_BASE_PATH:/cotip/${cotip.api.version}}
+    base-path: ${COTIP_API_BASE_PATH:/cotip}
+  security:
+    api-key:
+      enabled: ${COTIP_API_KEY_ENABLED:true}
+      header: ${COTIP_API_KEY_HEADER:cotip-api-key}
+      default-requests-per-minute: ${COTIP_API_KEY_DEFAULT_RPM:120}
   health:
     max-freshness-minutes: ${COTIP_HEALTH_MAX_FRESHNESS_MINUTES:480}
   http:

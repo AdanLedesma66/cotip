@@ -2,11 +2,15 @@ package py.com.cotip.application.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import py.com.cotip.domain.commons.CotipError;
 import py.com.cotip.domain.commons.ProviderType;
+import py.com.cotip.domain.exception.CotipException;
+import py.com.cotip.domain.model.BranchOfficeBO;
 import py.com.cotip.domain.model.ExchangeRateBO;
 import py.com.cotip.domain.port.in.GetExchangeRatesUseCase;
 import py.com.cotip.domain.port.in.request.GetRatesQuery;
 import py.com.cotip.domain.port.out.ApplicationMetricsPort;
+import py.com.cotip.domain.port.out.BranchOfficeQueryPort;
 import py.com.cotip.domain.port.out.ExchangeRateRepositoryPort;
 import py.com.cotip.domain.port.out.ProviderRatesSourcePort;
 import py.com.cotip.domain.port.out.response.ChacoExchangeResponse;
@@ -24,15 +28,18 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
 
     private final ProviderRatesSourcePort providerRatesSourcePort;
     private final ExchangeRateRepositoryPort exchangeRateRepositoryPort;
+    private final BranchOfficeQueryPort branchOfficeQueryPort;
     private final ApplicationMetricsPort metricsPort;
 
     // ::: constructor
 
     public GetExchangeRatesUseCaseImpl(ProviderRatesSourcePort providerRatesSourcePort,
                                        ExchangeRateRepositoryPort exchangeRateRepositoryPort,
+                                       BranchOfficeQueryPort branchOfficeQueryPort,
                                        ApplicationMetricsPort metricsPort) {
         this.providerRatesSourcePort = providerRatesSourcePort;
         this.exchangeRateRepositoryPort = exchangeRateRepositoryPort;
+        this.branchOfficeQueryPort = branchOfficeQueryPort;
         this.metricsPort = metricsPort;
     }
 
@@ -87,10 +94,27 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
 
     @Override
     public List<ExchangeRateBO> findLatestCambiosChacoExchangeRates(String branchOfficeId) {
-        List<ChacoExchangeResponse> chacoRates = providerRatesSourcePort.fetchCambiosChacoExchangeRates(branchOfficeId);
-        String resolvedBranchOfficeId = extractBranchOfficeId(chacoRates);
+        String resolvedBranchOfficeId = resolveBranchOfficeId(branchOfficeId);
+        List<ChacoExchangeResponse> chacoRates = providerRatesSourcePort.fetchCambiosChacoExchangeRates(resolvedBranchOfficeId);
+        String extractedBranchOfficeId = extractBranchOfficeId(chacoRates);
 
-        return saveAndGetChacoRates(chacoRates, resolvedBranchOfficeId != null ? resolvedBranchOfficeId : branchOfficeId);
+        return saveAndGetChacoRates(chacoRates,
+                extractedBranchOfficeId);
+    }
+
+    @Override
+    public List<ExchangeRateBO> findLatestCambiosChacoExchangeRatesByBranchName(String branchOfficeName) {
+        String resolvedBranchOfficeId = resolveBranchOfficeName(branchOfficeName);
+        List<ChacoExchangeResponse> chacoRates = providerRatesSourcePort.fetchCambiosChacoExchangeRates(resolvedBranchOfficeId);
+        String extractedBranchOfficeId = extractBranchOfficeId(chacoRates);
+
+        return saveAndGetChacoRates(chacoRates,
+                extractedBranchOfficeId);
+    }
+
+    @Override
+    public List<BranchOfficeBO> findCambiosChacoBranches() {
+        return branchOfficeQueryPort.findAllCambiosChacoBranches();
     }
 
     private List<ExchangeRateBO> saveAndGetChacoRates(List<ChacoExchangeResponse> chacoRates, String branchOfficeId) {
@@ -164,5 +188,25 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                 .filter(branchOfficeId -> branchOfficeId != null && !branchOfficeId.isBlank())
                 .findFirst()
                 .orElse(null);
+    }
+
+    private String resolveBranchOfficeId(String branchOfficeId) {
+        String normalizedId = branchOfficeId.trim();
+        return branchOfficeQueryPort.findCambiosChacoByExternalBranchId(normalizedId)
+                .map(BranchOfficeBO::externalBranchId)
+                .orElseThrow(() -> new CotipException(404,
+                        CotipError.CAMBIOS_CHACO_BRANCH_INVALID.getCode(),
+                        "No existe sucursal con id: " + normalizedId,
+                        true));
+    }
+
+    private String resolveBranchOfficeName(String branchOfficeName) {
+        String normalizedName = branchOfficeName.trim();
+        return branchOfficeQueryPort.findCambiosChacoByName(normalizedName)
+                .map(BranchOfficeBO::externalBranchId)
+                .orElseThrow(() -> new CotipException(404,
+                        CotipError.CAMBIOS_CHACO_BRANCH_INVALID.getCode(),
+                        "No existe sucursal con nombre: " + normalizedName,
+                        true));
     }
 }

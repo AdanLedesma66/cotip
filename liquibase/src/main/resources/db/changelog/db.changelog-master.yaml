@@ -9,3 +9,5 @@ databaseChangeLog:
       file: db/changelog/changesets/004-create-branch-office-and-fk.yaml
   - include:
       file: db/changelog/changesets/005-create-shedlock-table.yaml
+  - include:
+      file: db/changelog/changesets/006-create-api-client-table.yaml

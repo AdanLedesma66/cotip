@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import py.com.cotip.domain.commons.ProviderType;
 import py.com.cotip.insfrastructure.external.cotipdb.model.BranchOfficeEntity;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,4 +15,8 @@ public interface BranchOfficeRepository extends JpaRepository<BranchOfficeEntity
     Optional<BranchOfficeEntity> findByProviderAndExternalBranchId(ProviderType provider, String externalBranchId);
 
     Optional<BranchOfficeEntity> findByProviderAndName(ProviderType provider, String name);
+
+    Optional<BranchOfficeEntity> findByProviderAndNameIgnoreCase(ProviderType provider, String name);
+
+    List<BranchOfficeEntity> findByProviderOrderByNameAsc(ProviderType provider);
 }

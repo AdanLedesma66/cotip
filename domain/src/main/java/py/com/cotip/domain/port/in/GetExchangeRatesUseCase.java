@@ -1,6 +1,7 @@
 package py.com.cotip.domain.port.in;
 
 
+import py.com.cotip.domain.model.BranchOfficeBO;
 import py.com.cotip.domain.model.ExchangeRateBO;
 import py.com.cotip.domain.port.in.request.GetRatesQuery;
 
@@ -17,6 +18,10 @@ public interface GetExchangeRatesUseCase {
     List<ExchangeRateBO> findLatestCambiosChacoExchangeRates();
 
     List<ExchangeRateBO> findLatestCambiosChacoExchangeRates(String branchOfficeId);
+
+    List<ExchangeRateBO> findLatestCambiosChacoExchangeRatesByBranchName(String branchOfficeName);
+
+    List<BranchOfficeBO> findCambiosChacoBranches();
 
 
 }
