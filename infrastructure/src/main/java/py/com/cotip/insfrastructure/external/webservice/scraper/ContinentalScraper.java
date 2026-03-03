@@ -102,7 +102,6 @@ public class ContinentalScraper extends AbstractProviderScraper<ContinentalBankR
                     return ContinentalBankResponse.builder()
                             .exchangeRate(standardizedRate.exchangeRateName())
                             .currencyCode(standardizedRate.currencyCode())
-                            .currencyName(standardizedRate.currencyName())
                             .quoteModality(standardizedRate.quoteModality())
                             .buyRate(cotizacion.getBuyRate().longValue())
                             .sellRate(cotizacion.getSellRate().longValue())

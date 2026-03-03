@@ -50,9 +50,6 @@ public class CotipEntity extends CotipBaseEntity {
     @Column(name = "currency_code", nullable = false)
     private String currencyCode;
 
-    @Column(name = "currency_name", nullable = false)
-    private String currencyName;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "quote_modality", nullable = false)
     private QuoteModality quoteModality;
