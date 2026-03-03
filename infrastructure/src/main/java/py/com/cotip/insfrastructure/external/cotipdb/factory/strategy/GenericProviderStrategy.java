@@ -3,6 +3,7 @@ package py.com.cotip.insfrastructure.external.cotipdb.factory.strategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import py.com.cotip.domain.commons.ProviderType;
+import py.com.cotip.domain.commons.QuoteModality;
 import py.com.cotip.domain.commons.RateChange;
 import py.com.cotip.insfrastructure.external.cotipdb.factory.CotipSaveStrategy;
 import py.com.cotip.insfrastructure.external.cotipdb.model.CotipEntity;
@@ -31,8 +32,11 @@ public class GenericProviderStrategy implements CotipSaveStrategy {
             cotipEntity.setProvider(providerType);
 
             Optional<CotipEntity> lastCotipEntity = cotipRepository
-                    .findTopByExchangeRateAndProviderAndBranchOfficeOrderByUpdatedAtDesc(
-                            cotipEntity.getExchangeRate(), providerType, cotipEntity.getBranchOffice());
+                    .findTopByCurrencyCodeAndQuoteModalityAndProviderAndBranchOfficeOrderByUpdatedAtDesc(
+                            cotipEntity.getCurrencyCode(),
+                            quoteModality(cotipEntity.getQuoteModality()),
+                            providerType,
+                            cotipEntity.getBranchOffice());
 
             if (lastCotipEntity.isPresent()) {
                 CotipEntity previousCotip = lastCotipEntity.get();
@@ -54,5 +58,9 @@ public class GenericProviderStrategy implements CotipSaveStrategy {
             return RateChange.DECREASED;
         }
         return RateChange.UNCHANGED;
+    }
+
+    private QuoteModality quoteModality(QuoteModality quoteModality) {
+        return quoteModality == null ? QuoteModality.CASH : quoteModality;
     }
 }

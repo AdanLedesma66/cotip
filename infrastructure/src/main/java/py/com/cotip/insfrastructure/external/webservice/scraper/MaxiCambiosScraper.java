@@ -81,16 +81,16 @@ public class MaxiCambiosScraper extends AbstractProviderScraper<MaxiExchangeResp
                     default -> exchangeRate;
                 };
 
-                String standardizedExchangeRate = CurrencyUtils.getStandardizedExchangeRateName(exchangeRate);
-                String standardizedCurrencyCode = CurrencyUtils.getCurrencyCode(standardizedExchangeRate);
-
-                if (standardizedCurrencyCode == null) {
+                CurrencyUtils.StandardizedRate standardizedRate = CurrencyUtils.standardizeExchangeRate(exchangeRate);
+                if (standardizedRate == null) {
                     continue;
                 }
 
                 rates.add(MaxiExchangeResponse.builder()
-                        .exchangeRate(standardizedExchangeRate)
-                        .currencyCode(standardizedCurrencyCode)
+                        .exchangeRate(standardizedRate.exchangeRateName())
+                        .currencyCode(standardizedRate.currencyCode())
+                        .currencyName(standardizedRate.currencyName())
+                        .quoteModality(standardizedRate.quoteModality())
                         .buyRate(buyRate.longValue())
                         .sellRate(sellRate.longValue())
                         .city("Cheque Transferencia".equals(sectionName) ? null : sectionName)

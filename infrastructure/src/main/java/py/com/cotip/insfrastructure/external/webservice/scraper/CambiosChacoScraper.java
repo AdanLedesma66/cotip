@@ -133,14 +133,16 @@ public class CambiosChacoScraper extends AbstractProviderScraper<ChacoExchangeRe
                 .filter(item -> item.getIsoCode() != null && item.getPurchasePrice() != null && item.getSalePrice() != null)
                 .map(item -> {
                     String currencyCode = item.getIsoCode().trim().toUpperCase(Locale.ROOT);
-                    String exchangeRate = CurrencyUtils.getExchangeRateNameByIsoCode(currencyCode);
-                    if (exchangeRate == null) {
-                        exchangeRate = currencyCode;
+                    CurrencyUtils.StandardizedRate standardizedRate = CurrencyUtils.fromIsoCode(currencyCode);
+                    if (standardizedRate == null) {
+                        standardizedRate = CurrencyUtils.unknownFromIsoCode(currencyCode);
                     }
 
                     return ChacoExchangeResponse.builder()
-                            .exchangeRate(exchangeRate)
-                            .currencyCode(currencyCode)
+                            .exchangeRate(standardizedRate.exchangeRateName())
+                            .currencyCode(standardizedRate.currencyCode())
+                            .currencyName(standardizedRate.currencyName())
+                            .quoteModality(standardizedRate.quoteModality())
                             .buyRate(toLong(item.getPurchasePrice()))
                             .sellRate(toLong(item.getSalePrice()))
                             .branchOffice(branchOfficeName)

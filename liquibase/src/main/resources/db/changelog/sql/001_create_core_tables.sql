@@ -28,7 +28,9 @@ CREATE TABLE IF NOT EXISTS cotip_entity (
     branch_office VARCHAR(200),
     branch_office_id UUID,
     exchange_rate VARCHAR(200) NOT NULL,
-    currency_code VARCHAR(10),
+    currency_code VARCHAR(10) NOT NULL,
+    currency_name VARCHAR(150) NOT NULL,
+    quote_modality VARCHAR(30) NOT NULL,
     buy_rate BIGINT,
     sell_rate BIGINT,
     buy_rate_status VARCHAR(20),
@@ -39,4 +41,6 @@ CREATE TABLE IF NOT EXISTS cotip_entity (
 
 CREATE INDEX IF NOT EXISTS idx_cotip_provider_updated_at ON cotip_entity (provider, updated_at DESC);
 CREATE INDEX IF NOT EXISTS idx_cotip_provider_rate_updated_at ON cotip_entity (provider, exchange_rate, updated_at DESC);
+CREATE INDEX IF NOT EXISTS idx_cotip_provider_currency_modality_branch_updated_at
+    ON cotip_entity (provider, currency_code, quote_modality, branch_office, updated_at DESC);
 CREATE INDEX IF NOT EXISTS idx_cotip_entity_branch_office_id ON cotip_entity (branch_office_id);

@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import py.com.cotip.domain.commons.CotipError;
 import py.com.cotip.domain.commons.ProviderType;
+import py.com.cotip.domain.commons.QuoteModality;
 import py.com.cotip.domain.exception.CotipException;
 import py.com.cotip.domain.model.BranchOfficeBO;
 import py.com.cotip.domain.model.ExchangeRateBO;
@@ -59,7 +60,7 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
         log.info("Obtenemos la ultima cotizacion guardada");
         List<ExchangeRateBO> storedRates = exchangeRateRepositoryPort.findAllByProviderOrderByUpdatedAt(
                 ProviderType.CONTINENTAL_BANK);
-        List<ExchangeRateBO> result = latestByExchangeRateAndBranch(storedRates);
+        List<ExchangeRateBO> result = latestByCurrencyAndModalityAndBranch(storedRates);
         metricsPort.recordFreshness(ProviderType.CONTINENTAL_BANK, result);
         return result;
     }
@@ -73,7 +74,7 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
         log.info("Obtenemos la ultima cotizacion guardada");
         List<ExchangeRateBO> storedRates = exchangeRateRepositoryPort.findAllByProviderOrderByUpdatedAt(
                 ProviderType.GNB_BANK);
-        List<ExchangeRateBO> result = latestByExchangeRateAndBranch(storedRates);
+        List<ExchangeRateBO> result = latestByCurrencyAndModalityAndBranch(storedRates);
         metricsPort.recordFreshness(ProviderType.GNB_BANK, result);
         return result;
     }
@@ -87,7 +88,7 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
         log.info("Obtenemos la ultima cotizacion guardada");
         List<ExchangeRateBO> storedRates = exchangeRateRepositoryPort.findAllByProviderOrderByUpdatedAt(
                 ProviderType.MAXI_CAMBIOS);
-        List<ExchangeRateBO> result = latestByExchangeRateAndBranch(storedRates);
+        List<ExchangeRateBO> result = latestByCurrencyAndModalityAndBranch(storedRates);
         metricsPort.recordFreshness(ProviderType.MAXI_CAMBIOS, result);
         return result;
     }
@@ -133,7 +134,7 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
         List<ExchangeRateBO> storedRates = exchangeRateRepositoryPort
                 .findAllByProviderAndBranchOfficeExternalIdOrderByUpdatedAt(ProviderType.CAMBIOS_CHACO,
                         branchOfficeId);
-        List<ExchangeRateBO> result = latestByExchangeRate(storedRates);
+        List<ExchangeRateBO> result = latestByCurrencyAndModality(storedRates);
         metricsPort.recordFreshness(ProviderType.CAMBIOS_CHACO, result);
         return result;
     }
@@ -148,6 +149,8 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                 .map(rate -> ExchangeRateBO.builder()
                         .exchangeRate(rate.getExchangeRate())
                         .currencyCode(rate.getCurrencyCode())
+                        .currencyName(rate.getCurrencyName())
+                        .quoteModality(rate.getQuoteModality())
                         .buyRate(rate.getBuyRate())
                         .sellRate(rate.getSellRate())
                         .build())
@@ -159,6 +162,8 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                 .map(rate -> ExchangeRateBO.builder()
                         .exchangeRate(rate.getExchangeRate())
                         .currencyCode(rate.getCurrencyCode())
+                        .currencyName(rate.getCurrencyName())
+                        .quoteModality(rate.getQuoteModality())
                         .buyRate(rate.getBuyRate())
                         .sellRate(rate.getSellRate())
                         .build())
@@ -170,6 +175,8 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                 .map(rate -> ExchangeRateBO.builder()
                         .exchangeRate(rate.getExchangeRate())
                         .currencyCode(rate.getCurrencyCode())
+                        .currencyName(rate.getCurrencyName())
+                        .quoteModality(rate.getQuoteModality())
                         .buyRate(rate.getBuyRate())
                         .sellRate(rate.getSellRate())
                         .branchOffice(rate.getCity())
@@ -183,6 +190,8 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                 .map(rate -> ExchangeRateBO.builder()
                         .exchangeRate(rate.getExchangeRate())
                         .currencyCode(rate.getCurrencyCode())
+                        .currencyName(rate.getCurrencyName())
+                        .quoteModality(rate.getQuoteModality())
                         .buyRate(rate.getBuyRate())
                         .sellRate(rate.getSellRate())
                         .branchOffice(rate.getBranchOffice())
@@ -219,12 +228,16 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
                         true));
     }
 
-    private List<ExchangeRateBO> latestByExchangeRateAndBranch(List<ExchangeRateBO> rates) {
-        return latestByKey(rates, rate -> normalize(rate.getExchangeRate()) + "|" + normalize(rate.getBranchOffice()));
+    private List<ExchangeRateBO> latestByCurrencyAndModalityAndBranch(List<ExchangeRateBO> rates) {
+        return latestByKey(rates,
+                rate -> normalize(rate.getCurrencyCode()) + "|"
+                        + normalize(modalityValue(rate.getQuoteModality())) + "|"
+                        + normalize(rate.getBranchOffice()));
     }
 
-    private List<ExchangeRateBO> latestByExchangeRate(List<ExchangeRateBO> rates) {
-        return latestByKey(rates, rate -> normalize(rate.getExchangeRate()));
+    private List<ExchangeRateBO> latestByCurrencyAndModality(List<ExchangeRateBO> rates) {
+        return latestByKey(rates,
+                rate -> normalize(rate.getCurrencyCode()) + "|" + normalize(modalityValue(rate.getQuoteModality())));
     }
 
     private List<ExchangeRateBO> latestByKey(List<ExchangeRateBO> rates, Function<ExchangeRateBO, String> keyBuilder) {
@@ -243,5 +256,9 @@ public class GetExchangeRatesUseCaseImpl implements GetExchangeRatesUseCase {
         }
 
         return value.trim().toLowerCase(Locale.ROOT);
+    }
+
+    private String modalityValue(QuoteModality modality) {
+        return modality == null ? QuoteModality.CASH.name() : modality.name();
     }
 }

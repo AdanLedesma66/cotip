@@ -3,6 +3,8 @@ package py.com.cotip.insfrastructure.external.cotipdb.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -13,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import py.com.cotip.domain.commons.ProviderType;
+import py.com.cotip.domain.commons.QuoteModality;
 import py.com.cotip.domain.commons.RateChange;
 import py.com.cotip.insfrastructure.external.cotipdb.config.CotipBaseEntity;
 import py.com.cotip.insfrastructure.external.cotipdb.util.ProviderTypeConverter;
@@ -44,8 +47,15 @@ public class CotipEntity extends CotipBaseEntity {
     @Column(name = "exchange_rate")
     private String exchangeRate;
 
-    @Column(name = "currency_code")
+    @Column(name = "currency_code", nullable = false)
     private String currencyCode;
+
+    @Column(name = "currency_name", nullable = false)
+    private String currencyName;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "quote_modality", nullable = false)
+    private QuoteModality quoteModality;
 
     @Column(name = "buy_rate")
     private Long buyRate;
