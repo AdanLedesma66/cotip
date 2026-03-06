@@ -19,6 +19,14 @@ spring:
   threads:
     virtual:
       enabled: true
+  data:
+    redis:
+      host: ${COTIP_REDIS_HOST:localhost}
+      port: ${COTIP_REDIS_PORT:6379}
+      password: ${COTIP_REDIS_PASSWORD:}
+      database: ${COTIP_REDIS_DATABASE:0}
+      timeout: ${COTIP_REDIS_TIMEOUT:5s}
+      connect-timeout: ${COTIP_REDIS_CONNECT_TIMEOUT:2s}
 
 management:
   endpoint:
@@ -47,6 +55,24 @@ cotip:
   api:
     version: ${COTIP_API_VERSION:v1}
     base-path: ${COTIP_API_BASE_PATH:/cotip}
+  cache:
+    provider: ${COTIP_CACHE_PROVIDER:redis}
+    redis:
+      key-prefix: ${COTIP_CACHE_REDIS_KEY_PREFIX:cotip:v1:}
+    ttl:
+      default: ${COTIP_CACHE_TTL_DEFAULT:PT5M}
+      continental-bank: ${COTIP_CACHE_TTL_CONTINENTAL:PT5M}
+      gnb-bank: ${COTIP_CACHE_TTL_GNB:PT5M}
+      maxi-exchange: ${COTIP_CACHE_TTL_MAXI:PT2M}
+      chaco-exchange: ${COTIP_CACHE_TTL_CHACO:PT1M}
+      chaco-branches: ${COTIP_CACHE_TTL_CHACO_BRANCHES:PT12H}
+  ingestion:
+    scheduler:
+      enabled: ${COTIP_INGESTION_SCHEDULER_ENABLED:true}
+      continental-cron: "${COTIP_INGEST_CONTINENTAL_CRON:0 */30 * * * *}"
+      gnb-cron: "${COTIP_INGEST_GNB_CRON:0 */30 * * * *}"
+      maxi-cron: "${COTIP_INGEST_MAXI_CRON:0 */10 * * * *}"
+      chaco-cron: "${COTIP_INGEST_CHACO_CRON:0 */5 * * * *}"
   security:
     api-key:
       enabled: ${COTIP_API_KEY_ENABLED:true}
