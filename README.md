@@ -82,6 +82,36 @@ Timeouts HTTP para scrapers:
 - `COTIP_HTTP_CONNECT_TIMEOUT_SECONDS` (default: `5`)
 - `COTIP_HTTP_READ_TIMEOUT_SECONDS` (default: `12`)
 
+Scheduler de ingestion (externo -> DB):
+
+- `COTIP_INGESTION_SCHEDULER_ENABLED` (default: `true`)
+- `COTIP_INGEST_CONTINENTAL_CRON` (default: `0 */30 * * * *`)
+- `COTIP_INGEST_GNB_CRON` (default: `0 */30 * * * *`)
+- `COTIP_INGEST_MAXI_CRON` (default: `0 */10 * * * *`)
+- `COTIP_INGEST_CHACO_CRON` (default: `0 */5 * * * *`)
+
+La API atiende desde cache/DB y no consulta proveedores externos en cada request.
+
+Cache distribuido (Redis):
+
+- `COTIP_CACHE_PROVIDER` (default: `redis`, opcional `ehcache`)
+- `COTIP_REDIS_HOST` (default: `localhost`)
+- `COTIP_REDIS_PORT` (default: `6379`)
+- `COTIP_REDIS_PASSWORD` (default: vacio)
+- `COTIP_REDIS_DATABASE` (default: `0`)
+- `COTIP_REDIS_TIMEOUT` (default: `5s`)
+- `COTIP_REDIS_CONNECT_TIMEOUT` (default: `2s`)
+- `COTIP_CACHE_REDIS_KEY_PREFIX` (default: `cotip:v1:`)
+
+TTL por cache:
+
+- `COTIP_CACHE_TTL_DEFAULT` (default: `PT5M`)
+- `COTIP_CACHE_TTL_CONTINENTAL` (default: `PT5M`)
+- `COTIP_CACHE_TTL_GNB` (default: `PT5M`)
+- `COTIP_CACHE_TTL_MAXI` (default: `PT2M`)
+- `COTIP_CACHE_TTL_CHACO` (default: `PT1M`)
+- `COTIP_CACHE_TTL_CHACO_BRANCHES` (default: `PT12H`)
+
 ## Estructura de modulos
 
 - `domain`: tipos y reglas base de dominio

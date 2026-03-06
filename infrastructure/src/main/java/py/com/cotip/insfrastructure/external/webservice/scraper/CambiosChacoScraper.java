@@ -198,13 +198,6 @@ public class CambiosChacoScraper extends AbstractProviderScraper<ChacoExchangeRe
             normalizedBranchOfficeId = normalizedBranchOfficeId.trim();
         }
 
-        if (!ChacoBranchCatalog.existsId(normalizedBranchOfficeId)) {
-            throw new CotipException(HttpStatus.BAD_REQUEST.value(),
-                    CotipError.CAMBIOS_CHACO_BRANCH_INVALID.getCode(),
-                    "Sucursal de Cambios Chaco invalida: " + normalizedBranchOfficeId,
-                    true);
-        }
-
         return normalizedBranchOfficeId;
     }
 
